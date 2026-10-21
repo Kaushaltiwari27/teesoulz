@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+:root {
+  --primary-black: #080808;
+  --primary-white: #ffffff;
+  --silver-grey: #b8b8b8;
+  --soft-grey: #f3f3f3;
+  --primary-text: #111111;
+  --secondary-text: #666666;
+  --border-color: #e5e5e5;
+  --muted-surface: #fafafa;
+  --error: #dc2626;
+  --success: #16a34a;
+
+  --background: #ffffff;
+  --foreground: #111111;
+}
+
+body {
+  background-color: #ffffff;
+  color: #111111;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f3f3f3;
+}
+::-webkit-scrollbar-thumb {
+  background: #b8b8b8;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #080808;
+}
+
+/* Clean horizontal scroller */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Infinite Marquee Ticker */
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* 3D Stroke & Outline Typography */
+.stroke-text {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.2);
+  text-stroke: 1.5px rgba(255, 255, 255, 0.2);
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+
