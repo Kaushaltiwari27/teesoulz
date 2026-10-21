@@ -68,7 +68,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             priority={priority}
-            className={`object-cover transition-opacity duration-500 ${
+            className={`object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform group-hover:scale-105 ${
               isHovered && hasSecondaryImage ? 'opacity-0' : 'opacity-100'
             }`}
           />
@@ -80,7 +80,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
               alt={`${product.name} alternate view`}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className={`object-cover transition-all duration-500 scale-100 group-hover:scale-105 ${
+              className={`object-cover transition-all duration-[1.2s] ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform scale-100 group-hover:scale-105 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
               }`}
             />

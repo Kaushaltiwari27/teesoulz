@@ -112,14 +112,15 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
           {/* Left: Gallery Column (7 cols) */}
           <div className="lg:col-span-7 space-y-4">
             {/* Main Stage Image */}
-            <div className="relative aspect-[3/4] w-full bg-[#F3F3F3] border border-[#E5E5E5] overflow-hidden">
+            <div className="relative aspect-[3/4] w-full bg-[#F3F3F3] border border-[#E5E5E5] overflow-hidden group">
               <Image
+                key={activeImageIndex}
                 src={product.images[activeImageIndex] || product.images[0]}
                 alt={product.name}
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"
                 priority
-                className="object-cover"
+                className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-105"
               />
 
               {/* Discount Badge */}
@@ -138,8 +139,8 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                     key={idx}
                     type="button"
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`relative aspect-[3/4] bg-[#F3F3F3] border-2 transition-all overflow-hidden ${
-                      activeImageIndex === idx ? 'border-black' : 'border-[#E5E5E5] opacity-75 hover:opacity-100'
+                    className={`relative aspect-[3/4] bg-[#F3F3F3] border-2 transition-all duration-300 overflow-hidden ${
+                      activeImageIndex === idx ? 'border-black ring-1 ring-black opacity-100' : 'border-[#E5E5E5] opacity-70 hover:opacity-100'
                     }`}
                   >
                     <Image

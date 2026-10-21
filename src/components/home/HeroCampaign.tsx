@@ -115,6 +115,7 @@ const SLIDES: Slide[] = [
 
 export default function HeroCampaign() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [isApertureRevealed, setIsApertureRevealed] = useState<boolean>(false);
   
   const contentRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -127,6 +128,14 @@ export default function HeroCampaign() {
 
   const prevSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+  }, []);
+
+  // Initial cinematic aperture reveal on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsApertureRevealed(true);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   // Auto-play timer (changes automatically every 3 seconds)
@@ -157,18 +166,18 @@ export default function HeroCampaign() {
     };
   }, [currentIndex, nextSlide]);
 
-  // GSAP text animations on slide change
+  // GSAP text line unmasking on slide change
   useEffect(() => {
     if (!contentRef.current) return;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.slide-text-elem',
-        { y: 25, opacity: 0 },
+        { y: 35, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.5,
+          duration: 0.6,
           stagger: 0.08,
           ease: 'power3.out',
         }
@@ -179,13 +188,15 @@ export default function HeroCampaign() {
   }, [currentIndex]);
 
   return (
-    <section
-      className="relative w-full bg-[#080808] text-white overflow-hidden border-b border-[#222222]"
-    >
-      {/* Editorial Split / Layered Container */}
-      <div className="relative min-h-[660px] sm:min-h-[780px] lg:min-h-[860px] w-full flex items-center">
-        
-        {/* Full-Bleed Editorial Model Images (Crossfade Transition) */}
+    <section className="relative w-full bg-[#080808] text-white overflow-hidden border-b border-[#222222]">
+      {/* Editorial Split / Layered Container with Aperture Reveal */}
+      <div
+        className="relative min-h-[680px] sm:min-h-[780px] lg:min-h-[880px] w-full flex items-center overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          clipPath: isApertureRevealed ? 'inset(0% 0% 0% 0%)' : 'inset(4% 4% 4% 4%)',
+        }}
+      >
+        {/* Full-Bleed Editorial Model Images (Crossfade & Parallax Transition) */}
         {SLIDES.map((slide, index) => {
           const isActive = index === currentIndex;
           return (
@@ -195,7 +206,7 @@ export default function HeroCampaign() {
                 isActive ? 'opacity-100 z-[1]' : 'opacity-0 z-0 pointer-events-none'
               }`}
             >
-              {/* Desktop Image */}
+              {/* Desktop Image with Controlled Parallax Breath */}
               <div className="absolute inset-0 hidden sm:block">
                 <Image
                   src={slide.image}
@@ -203,7 +214,7 @@ export default function HeroCampaign() {
                   fill
                   priority={index === 0}
                   sizes="100vw"
-                  className={`object-cover object-center filter contrast-105 brightness-90 transition-transform duration-10000 ease-out ${
+                  className={`object-cover object-center filter contrast-105 brightness-90 transition-transform duration-[6000ms] ease-out will-change-transform ${
                     isActive ? 'scale-105' : 'scale-100'
                   }`}
                 />
@@ -222,17 +233,17 @@ export default function HeroCampaign() {
               </div>
 
               {/* High-Contrast Gradient Shadows For Readability */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-black/20" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/25" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40" />
             </div>
           );
         })}
 
-        {/* Top Progress Bar */}
-        <div className="absolute top-0 inset-x-0 h-1 bg-white/10 z-30">
+        {/* Top Hairline Progress Bar */}
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-white/15 z-30">
           <div
             ref={progressBarRef}
-            className="h-full bg-white transition-all shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+            className="h-full bg-white transition-all shadow-[0_0_8px_rgba(255,255,255,0.7)]"
             style={{ width: '0%' }}
           />
         </div>
@@ -242,7 +253,7 @@ export default function HeroCampaign() {
           <div ref={contentRef} className="max-w-2xl space-y-4 sm:space-y-6">
             
             {/* Slide Tag & Live Drop Indicator */}
-            <div className="slide-text-elem inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-[#D4D4D4] text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-xl">
+            <div className="slide-text-elem inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 bg-black/60 backdrop-blur-md border border-white/20 text-[#D4D4D4] text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-xl">
               <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white animate-pulse" />
               <span>{currentSlide.tag}</span>
             </div>
@@ -252,8 +263,8 @@ export default function HeroCampaign() {
               {currentSlide.subtitle}
             </div>
 
-            {/* Giant Streetwear Headline */}
-            <h1 className="slide-text-elem text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase tracking-tight text-white leading-[0.95] font-sans break-words">
+            {/* Giant Streetwear Headline with Masked Reveal */}
+            <h1 className="slide-text-elem text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white leading-[0.95] font-sans break-words">
               {currentSlide.title}
               <br />
               <span className="text-[#888888] font-light italic tracking-normal">
@@ -331,6 +342,15 @@ export default function HeroCampaign() {
           </button>
         </div>
 
+        {/* Architectural Scroll Indicator (Homeeee Style) */}
+        <div className="hidden lg:flex absolute bottom-8 left-8 z-20 items-center gap-4 pointer-events-none select-none opacity-60 hover:opacity-100 transition-opacity">
+          <div className="w-8 h-[1px] bg-white/40" />
+          <span className="text-[9px] font-mono tracking-[0.25em] text-[#CCCCCC] uppercase">
+            SCROLL TO EXPLORE
+          </span>
+          <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+        </div>
+
         {/* Slide Thumbnail Strip on Desktop */}
         <div className="hidden lg:flex flex-col gap-2 absolute top-1/2 -translate-y-1/2 right-8 z-20">
           {SLIDES.map((slide, index) => {
@@ -350,8 +370,8 @@ export default function HeroCampaign() {
                 <span
                   className={`block transition-all ${
                     isActive
-                      ? 'w-8 h-1 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]'
-                      : 'w-4 h-1 bg-white/40 group-hover:w-6'
+                      ? 'w-8 h-[2px] bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]'
+                      : 'w-4 h-[1px] bg-white/40 group-hover:w-6'
                   }`}
                 />
               </button>

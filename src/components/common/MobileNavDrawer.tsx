@@ -38,7 +38,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
       />
 
       {/* Drawer */}
-      <div className="fixed inset-y-0 left-0 max-w-xs w-full bg-white shadow-2xl flex flex-col z-10 transition-transform duration-300 animate-in slide-in-from-left">
+      <div className="fixed inset-y-0 left-0 max-w-xs w-full bg-white shadow-2xl flex flex-col z-10 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] animate-in slide-in-from-left">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#E5E5E5]">
           <Link href="/" onClick={onClose} className="flex items-center" aria-label="TEESOULZ">
@@ -82,28 +82,37 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
         {/* Navigation Links Scrollable */}
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6">
           <div>
-            <h5 className="text-[11px] font-bold uppercase tracking-wider text-[#666666] mb-3">
-              Shop Categories
-            </h5>
+            <div className="flex items-center justify-between mb-3">
+              <h5 className="text-[11px] font-bold uppercase tracking-wider text-[#666666]">
+                Shop Categories
+              </h5>
+              <span className="text-[9px] font-mono text-[#999999] tracking-widest">EDITION 2026</span>
+            </div>
             <ul className="space-y-1">
               <li>
                 <Link
                   href="/shop"
                   onClick={onClose}
-                  className="flex items-center justify-between py-2 text-sm font-semibold text-[#111111] hover:text-black"
+                  className="flex items-center justify-between py-2 text-sm font-semibold text-[#111111] hover:text-black transition-colors"
                 >
-                  <span>Shop All Products</span>
+                  <span className="flex items-center gap-2.5">
+                    <span className="text-[10px] font-mono text-[#999999]">00</span>
+                    Shop All Products
+                  </span>
                   <ChevronRight className="w-4 h-4 text-[#B8B8B8]" />
                 </Link>
               </li>
-              {CATEGORIES_DATA.map((cat) => (
+              {CATEGORIES_DATA.map((cat, idx) => (
                 <li key={cat.slug}>
                   <Link
                     href={`/category/${cat.slug}`}
                     onClick={onClose}
-                    className="flex items-center justify-between py-2 text-sm text-[#333333] hover:text-black"
+                    className="flex items-center justify-between py-2 text-sm text-[#333333] hover:text-black transition-colors"
                   >
-                    <span>{cat.name}</span>
+                    <span className="flex items-center gap-2.5">
+                      <span className="text-[10px] font-mono text-[#999999]">0{idx + 1}</span>
+                      <span>{cat.name}</span>
+                    </span>
                     <span className="text-xs text-[#888888]">{cat.itemCount}</span>
                   </Link>
                 </li>
