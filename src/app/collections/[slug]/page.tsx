@@ -18,9 +18,22 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const col = COLLECTIONS_DATA.find((c) => c.slug === slug);
+  const title = col ? `${col.name} Capsule Collection — TEESOULZ` : 'Streetwear Collections — TEESOULZ';
+  const description = col?.description || 'Explore limited capsule releases from TEESOULZ Indian streetwear.';
+  const url = `https://teesoulz.in/collections/${slug}`;
+
   return {
-    title: col ? `${col.name} Capsule Drop — TEESOULZ` : 'Streetwear Collections — TEESOULZ',
-    description: col?.description || 'Limited capsule releases from TEESOULZ.',
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      images: [col?.image || '/teesoulz-logo.png'],
+    },
   };
 }
 

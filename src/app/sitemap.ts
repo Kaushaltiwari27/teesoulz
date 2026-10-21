@@ -1,122 +1,115 @@
 import { MetadataRoute } from 'next';
 import { PRODUCTS, CATEGORIES_DATA, COLLECTIONS_DATA } from '@/data/mockData';
 
-const BASE_URL = 'https://teesoulz.in';
-
 export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://teesoulz.in';
   const currentDate = new Date().toISOString();
 
-  // 1. Static Core Pages
+  // Static / Core Landing Pages
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: BASE_URL,
+      url: `${baseUrl}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 1.0,
     },
     {
-      url: `${BASE_URL}/shop`,
+      url: `${baseUrl}/shop`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/new-in`,
+      url: `${baseUrl}/new-in`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/bestsellers`,
+      url: `${baseUrl}/bestsellers`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/sale`,
+      url: `${baseUrl}/sale`,
       lastModified: currentDate,
       changeFrequency: 'daily',
-      priority: 0.85,
+      priority: 0.8,
     },
     {
-      url: `${BASE_URL}/about`,
+      url: `${baseUrl}/about`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/contact`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/track-order`,
+      url: `${baseUrl}/contact`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.6,
     },
     {
-      url: `${BASE_URL}/size-guide`,
+      url: `${baseUrl}/track-order`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.6,
     },
     {
-      url: `${BASE_URL}/faq`,
+      url: `${baseUrl}/size-guide`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.6,
     },
     {
-      url: `${BASE_URL}/policies/shipping`,
+      url: `${baseUrl}/policies/shipping`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
-      url: `${BASE_URL}/policies/returns`,
+      url: `${baseUrl}/policies/returns`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
-      url: `${BASE_URL}/policies/privacy`,
+      url: `${baseUrl}/policies/privacy`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
+      changeFrequency: 'yearly',
       priority: 0.4,
     },
     {
-      url: `${BASE_URL}/policies/terms`,
+      url: `${baseUrl}/policies/terms`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
+      changeFrequency: 'yearly',
       priority: 0.4,
     },
   ];
 
-  // 2. Dynamic Product Routes (All 28 Products)
-  const productRoutes: MetadataRoute.Sitemap = PRODUCTS.map((product) => ({
-    url: `${BASE_URL}/product/${product.slug}`,
+  // Category Pages
+  const categoryRoutes: MetadataRoute.Sitemap = CATEGORIES_DATA.map((cat) => ({
+    url: `${baseUrl}/category/${cat.slug}`,
     lastModified: currentDate,
-    changeFrequency: 'daily',
+    changeFrequency: 'weekly',
     priority: 0.85,
   }));
 
-  // 3. Dynamic Category Routes
-  const categoryRoutes: MetadataRoute.Sitemap = CATEGORIES_DATA.map((cat) => ({
-    url: `${BASE_URL}/category/${cat.slug}`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }));
-
-  // 4. Dynamic Collection Routes
+  // Collection Pages
   const collectionRoutes: MetadataRoute.Sitemap = COLLECTIONS_DATA.map((col) => ({
-    url: `${BASE_URL}/collections/${col.slug}`,
+    url: `${baseUrl}/collections/${col.slug}`,
     lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.85,
+  }));
+
+  // Product Detail Pages (All 28 Products)
+  const productRoutes: MetadataRoute.Sitemap = PRODUCTS.map((prod) => ({
+    url: `${baseUrl}/product/${prod.slug}`,
+    lastModified: prod.createdAt ? new Date(prod.createdAt).toISOString() : currentDate,
     changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...productRoutes, ...categoryRoutes, ...collectionRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...collectionRoutes, ...productRoutes];
 }

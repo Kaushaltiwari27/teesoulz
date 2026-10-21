@@ -24,10 +24,22 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const category = CATEGORIES_DATA.find((c) => c.slug === slug);
-  const title = category ? `${category.name} — TEESOULZ Streetwear` : `${slug.replace('-', ' ').toUpperCase()} — TEESOULZ`;
+  const title = category ? `${category.name} — TEESOULZ Indian Streetwear` : `${slug.replace('-', ' ').toUpperCase()} Streetwear — TEESOULZ`;
+  const description = category?.description || `Explore ${slug} streetwear drops by TEESOULZ. Crafted with 260-420 GSM heavyweight combed cotton in India.`;
+  const url = `https://teesoulz.in/category/${slug}`;
+
   return {
     title,
-    description: category?.description || `Explore ${slug} streetwear drops by TEESOULZ.`,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      images: [category?.image || '/teesoulz-logo.png'],
+    },
   };
 }
 

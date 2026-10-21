@@ -7,11 +7,15 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: [
-          '/account',
           '/account/*',
           '/checkout',
           '/order-confirmation/*',
+          '/api/*',
         ],
+      },
+      {
+        userAgent: 'Googlebot-Image',
+        allow: '/',
       },
     ],
     sitemap: 'https://teesoulz.in/sitemap.xml',

@@ -22,44 +22,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const ogImage = product.images[0];
+  const productUrl = `https://teesoulz.in/product/${product.slug}`;
 
   return {
-    title: `${product.name} — TEESOULZ Indian Streetwear`,
-    description: `${product.subtitle || ''} ${product.description}`.trim(),
-    keywords: [
-      product.name,
-      'TEESOULZ',
-      product.category.replace('-', ' '),
-      product.fitType,
-      'Indian streetwear',
-      'buy oversized t-shirts India',
-      ...product.tags,
-    ],
+    title: `${product.name} (${product.fitType}) — ₹${product.price}`,
+    description: `${product.description} 100% combed cotton, 260-420 GSM heavyweight construction. Free express delivery in India with cash on delivery.`,
     alternates: {
-      canonical: `https://teesoulz.in/product/${product.slug}`,
+      canonical: productUrl,
     },
     openGraph: {
-      title: `${product.name} — TEESOULZ`,
+      title: `${product.name} | TEESOULZ Indian Streetwear`,
       description: product.description,
-      url: `https://teesoulz.in/product/${product.slug}`,
-      siteName: 'TEESOULZ',
+      url: productUrl,
+      type: 'website',
       images: [
         {
-          url: ogImage,
+          url: product.images[0],
           width: 1200,
           height: 1600,
           alt: product.name,
         },
       ],
-      locale: 'en_IN',
-      type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${product.name} — TEESOULZ`,
+      title: `${product.name} — ₹${product.price}`,
       description: product.description,
-      images: [ogImage],
+      images: [product.images[0]],
     },
   };
 }
@@ -77,19 +66,18 @@ export default async function ProductPage({ params }: Props) {
     (p) => p.category === product.category && p.id !== product.id
   ).slice(0, 4);
 
-  // Google Rich Snippet Structured Data (JSON-LD)
-  const productSchema = {
+  // Schema.org Product & Breadcrumb JSON-LD
+  const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     image: product.images,
     description: product.description,
-    sku: product.variants[0]?.sku || `TS-${product.id}`,
+    sku: product.variants[0]?.sku || product.id,
     mpn: product.id,
     brand: {
       '@type': 'Brand',
       name: 'TEESOULZ',
-      logo: 'https://teesoulz.in/icon.png',
     },
     offers: {
       '@type': 'Offer',
@@ -131,13 +119,13 @@ export default async function ProductPage({ params }: Props) {
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: product.rating,
-      reviewCount: product.reviewCount,
+      reviewCount: product.reviewCount || 1,
       bestRating: 5,
       worstRating: 1,
     },
   };
 
-  const breadcrumbSchema = {
+  const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -150,18 +138,12 @@ export default async function ProductPage({ params }: Props) {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Shop',
-        item: 'https://teesoulz.in/shop',
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
         name: product.category.replace('-', ' ').toUpperCase(),
         item: `https://teesoulz.in/category/${product.category}`,
       },
       {
         '@type': 'ListItem',
-        position: 4,
+        position: 3,
         name: product.name,
         item: `https://teesoulz.in/product/${product.slug}`,
       },
@@ -172,11 +154,11 @@ export default async function ProductPage({ params }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <ProductDetailClient product={product} relatedProducts={relatedProducts} />
     </>

@@ -1,0 +1,22 @@
+{
+  "name": "TEESOULZ — Premium Indian Streetwear",
+  "short_name": "TEESOULZ",
+  "description": "Authentic Indian streetwear, 260–420 GSM oversized t-shirts, drop-shoulder silhouettes, loopback hoodies, and tactical cargos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

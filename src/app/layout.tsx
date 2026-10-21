@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { StoreProvider } from '@/context/StoreContext';
@@ -16,37 +16,44 @@ const inter = Inter({
   variable: '--font-sans',
 });
 
+export const viewport: Viewport = {
+  themeColor: '#080808',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://teesoulz.in'),
   title: {
-    default: 'TEESOULZ — Premium Contemporary Indian Streetwear & Heavyweight Apparel',
-    template: '%s | TEESOULZ Streetwear',
+    default: 'TEESOULZ — Premium Indian Streetwear & Heavyweight Fashion Label',
+    template: '%s | TEESOULZ Indian Streetwear',
   },
   description:
-    'Official TEESOULZ® online store. Shop 240-420 GSM oversized t-shirts, brutalist graphic tees, architectural hoodies & tactical bottomwear engineered in India with express nationwide dispatch.',
-  applicationName: 'TEESOULZ',
+    'TEESOULZ is an authentic Indian streetwear brand specializing in 260–420 GSM oversized t-shirts, drop-shoulder silhouettes, loopback hoodies, and tactical cargo trousers. Crafted in India with express shipping across 27,000+ pin codes.',
   keywords: [
     'TEESOULZ',
     'Indian streetwear brand',
     'oversized t-shirts India',
-    'heavyweight tees 280 GSM',
-    '400 GSM loopback hoodie',
-    'brutalist streetwear Mumbai',
-    'cyberpunk graphic tees',
-    'tactical parachute cargo pants',
-    'drop shoulder silhouettes',
-    'unisex luxury streetwear',
-    'Bonkers Corner alternative',
-    'Warriorworld alternative',
-    'cotton streetwear blanks',
+    'heavyweight t-shirts 280 GSM',
+    'graphic tees India',
+    'streetwear Mumbai',
+    'drop shoulder t-shirts',
+    'hoodies and sweatshirts India',
+    'parachute cargo pants India',
+    'luxury streetwear India',
+    'combed cotton oversized tees',
+    'unisex streetwear India',
   ],
-  authors: [{ name: 'TEESOULZ Apparel Studios', url: 'https://teesoulz.in' }],
+  authors: [{ name: 'TEESOULZ Apparel Private Limited', url: 'https://teesoulz.in' }],
   creator: 'TEESOULZ',
-  publisher: 'TEESOULZ',
+  publisher: 'TEESOULZ Apparel',
+  applicationName: 'TEESOULZ',
+  generator: 'Next.js',
   formatDetection: {
     telephone: false,
-    address: false,
-    email: false,
+    address: true,
+    email: true,
   },
   alternates: {
     canonical: 'https://teesoulz.in',
@@ -56,36 +63,30 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'TEESOULZ — Premium Indian Streetwear & Heavyweight Apparel',
+    title: 'TEESOULZ — Premium Indian Streetwear & Heavyweight Fashion',
     description:
-      'Engineered 260-420 GSM custom-milled combed cotton with drop-shoulder boxy drapes. Designed in India for the global streetwear movement.',
+      'Engineered 260-420 GSM heavyweight silhouettes, drop-shoulder boxy drapes, and brutalist monochrome contrast. Made in India.',
     url: 'https://teesoulz.in',
     siteName: 'TEESOULZ',
-    images: [
-      {
-        url: '/icon.png',
-        width: 800,
-        height: 800,
-        alt: 'TEESOULZ Official Monogram Logo',
-      },
-      {
-        url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
-        width: 1200,
-        height: 630,
-        alt: 'TEESOULZ Autumn/Winter Drop 04 Campaign',
-      },
-    ],
     locale: 'en_IN',
     type: 'website',
+    images: [
+      {
+        url: '/teesoulz-logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'TEESOULZ Streetwear Official Emblem',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TEESOULZ — Premium Indian Streetwear',
+    title: 'TEESOULZ — Premium Indian Streetwear Label',
     description:
-      'Heavyweight 260-420 GSM silhouettes, monochrome contrast, and minimal boxy drapes engineered in India.',
-    images: ['/icon.png'],
+      'Heavyweight 260–420 GSM oversized t-shirts, brutalist graphic series, and drop-shoulder streetwear. Curated in India.',
     creator: '@teesoulz',
     site: '@teesoulz',
+    images: ['/teesoulz-logo.png'],
   },
   robots: {
     index: true,
@@ -100,25 +101,87 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
     ],
-    shortcut: '/favicon.png',
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
+  manifest: '/manifest.json',
   other: {
-    // Geo Targeting Meta Tags for India & International Search Engines
+    // Geo-targeting meta tags for Indian Streetwear Search
     'geo.region': 'IN-MH',
     'geo.placename': 'Mumbai, Maharashtra, India',
     'geo.position': '19.0760;72.8777',
     'ICBM': '19.0760, 72.8777',
-    'distribution': 'global',
-    'rating': 'general',
-    'target': 'all',
     'country': 'India',
+    'currency': 'INR',
   },
+};
+
+// JSON-LD Structured Data (Organization & Sitelinks Searchbox)
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ClothingStore',
+      '@id': 'https://teesoulz.in/#organization',
+      name: 'TEESOULZ',
+      alternateName: 'TEESOULZ Streetwear',
+      url: 'https://teesoulz.in',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://teesoulz.in/teesoulz-logo.png',
+        width: 512,
+        height: 512,
+      },
+      image: 'https://teesoulz.in/teesoulz-logo.png',
+      description:
+        'Premium contemporary Indian streetwear brand producing 260-420 GSM heavyweight apparel, oversized t-shirts, drop-shoulder silhouettes, and tactical cargo trousers.',
+      currenciesAccepted: 'INR',
+      paymentAccepted: 'UPI, Credit Card, Debit Card, Net Banking, Cash on Delivery',
+      priceRange: '₹₹',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Mumbai',
+        addressRegion: 'Maharashtra',
+        addressCountry: 'IN',
+        postalCode: '400050',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 19.076,
+        longitude: 72.8777,
+      },
+      areaServed: {
+        '@type': 'Country',
+        name: 'India',
+      },
+      sameAs: [
+        'https://instagram.com/teesoulz',
+        'https://twitter.com/teesoulz',
+        'https://youtube.com/@teesoulz',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://teesoulz.in/#website',
+      url: 'https://teesoulz.in',
+      name: 'TEESOULZ',
+      publisher: {
+        '@id': 'https://teesoulz.in/#organization',
+      },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: 'https://teesoulz.in/shop?q={search_term_string}',
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -126,75 +189,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Global Structured Data / Schema.org JSON-LD
-  const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'ClothingStore',
-    name: 'TEESOULZ',
-    alternateName: 'TEESOULZ Streetwear',
-    url: 'https://teesoulz.in',
-    logo: 'https://teesoulz.in/icon.png',
-    image: 'https://teesoulz.in/icon.png',
-    description:
-      'Contemporary Indian streetwear brand specializing in 260-420 GSM heavyweight combed cotton oversized t-shirts, hoodies, and tactical bottomwear.',
-    priceRange: '₹₹',
-    currenciesAccepted: 'INR',
-    paymentAccepted: 'Cash on Delivery, UPI, Credit Card, Debit Card, Net Banking',
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Mumbai',
-      addressRegion: 'Maharashtra',
-      postalCode: '400050',
-      addressCountry: 'IN',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: '19.0760',
-      longitude: '72.8777',
-    },
-    areaServed: [
-      {
-        '@type': 'Country',
-        name: 'India',
-      },
-      {
-        '@type': 'AdministrativeArea',
-        name: 'Worldwide',
-      },
-    ],
-    sameAs: [
-      'https://instagram.com/teesoulz',
-      'https://twitter.com/teesoulz',
-      'https://youtube.com/@teesoulz',
-    ],
-  };
-
-  const websiteSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'TEESOULZ',
-    url: 'https://teesoulz.in',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://teesoulz.in/shop?q={search_term_string}',
-      'query-input': 'required name=search_term_string',
-    },
-  };
-
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en-IN" className={inter.variable}>
       <head>
-        {/* Favicon fallback links */}
-        <link rel="icon" type="image/png" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans bg-white text-[#111111] antialiased">
