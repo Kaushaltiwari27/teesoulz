@@ -33,7 +33,7 @@ export default function CampaignBanner({
       : 'items-center text-center inset-x-6';
 
   return (
-    <section className="w-full bg-[#111111] py-2 sm:py-4">
+    <section className="w-full bg-white py-2 sm:py-4">
       <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8">
         <Link
           href={buttonLink}
