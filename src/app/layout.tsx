@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Archivo_Narrow } from 'next/font/google';
 import './globals.css';
 import { StoreProvider } from '@/context/StoreContext';
 import Header from '@/components/common/Header';
@@ -10,8 +10,9 @@ import QuickViewModal from '@/components/common/QuickViewModal';
 import SizeGuideModal from '@/components/common/SizeGuideModal';
 import ToastContainer from '@/components/common/ToastContainer';
 
-const inter = Inter({
+const archivoNarrow = Archivo_Narrow({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
   variable: '--font-sans',
 });
@@ -190,7 +191,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-IN" className={inter.variable}>
+    <html lang="en-IN" className={archivoNarrow.variable}>
       <head>
         <script
           type="application/ld+json"
