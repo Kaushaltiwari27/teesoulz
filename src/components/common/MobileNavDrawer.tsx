@@ -81,6 +81,39 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
 
         {/* Navigation Links Scrollable */}
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6">
+          {/* Primary Navigation Row */}
+          <div className="border-b border-[#E5E5E5] pb-4">
+            <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#888888] mb-2.5">
+              EXPLORE
+            </h5>
+            <ul className="space-y-1">
+              {[
+                { name: 'NEW IN', href: '/new-in', badge: 'NEW' },
+                { name: 'MEN', href: '/shop?gender=men' },
+                { name: 'WOMEN', href: '/shop?gender=women' },
+                { name: 'UNISEX', href: '/shop?gender=unisex' },
+                { name: 'COLLECTIONS', href: '/collections' },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    onClick={onClose}
+                    className="flex items-center justify-between py-2 text-sm font-bold tracking-wider text-[#080808] hover:text-black transition-colors"
+                  >
+                    <span>{item.name}</span>
+                    {item.badge ? (
+                      <span className="text-[9px] font-extrabold uppercase bg-black text-white px-1.5 py-0.5 rounded">
+                        {item.badge}
+                      </span>
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-[#CCCCCC]" />
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <div>
             <div className="flex items-center justify-between mb-3">
               <h5 className="text-[11px] font-bold uppercase tracking-wider text-[#666666]">

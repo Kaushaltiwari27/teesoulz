@@ -1,82 +1,53 @@
 import React from 'react';
 import HeroCampaign from '@/components/home/HeroCampaign';
-import KineticMarquee from '@/components/home/KineticMarquee';
-import ShopByCategory from '@/components/home/ShopByCategory';
-import ProductCarousel from '@/components/home/ProductCarousel';
+import FeaturedCategories from '@/components/home/FeaturedCategories';
+import CuratedProductGrid from '@/components/home/CuratedProductGrid';
 import FeaturedDrop from '@/components/home/FeaturedDrop';
-import ShopByStyle from '@/components/home/ShopByStyle';
-import BundlePromoSection from '@/components/home/BundlePromoSection';
 import BrandStorySection from '@/components/home/BrandStorySection';
-import TrustStrip from '@/components/home/TrustStrip';
-import CustomerReviewsSection from '@/components/home/CustomerReviewsSection';
-import InstagramUgcSection from '@/components/home/InstagramUgcSection';
 import { PRODUCTS } from '@/data/mockData';
 
 export default function HomePage() {
-  const newArrivals = PRODUCTS.filter((p) => p.isNewArrival || p.tags.includes('New Drop') || p.tags.includes('New In'));
-  const bestsellers = PRODUCTS.filter((p) => p.isBestseller);
-  const trending = PRODUCTS.filter((p) => p.isTrending);
+  // Curated New Arrivals (8 items)
+  const newArrivals = PRODUCTS.filter(
+    (p) => p.isNewArrival || p.tags.includes('New Drop') || p.tags.includes('New In')
+  );
+  const displayNewArrivals =
+    newArrivals.length >= 8 ? newArrivals.slice(0, 8) : PRODUCTS.slice(0, 8);
 
-  const displayNewArrivals = newArrivals.length >= 8 ? newArrivals.slice(0, 8) : PRODUCTS.slice(0, 8);
-  const displayBestsellers = bestsellers.length >= 8 ? bestsellers.slice(0, 8) : PRODUCTS.slice(4, 12);
-  const displayTrending = trending.length >= 8 ? trending.slice(0, 8) : PRODUCTS.slice(8, 16);
+  // Curated Bestsellers (4 items for tight, high-impact focus)
+  const bestsellers = PRODUCTS.filter((p) => p.isBestseller);
+  const displayBestsellers =
+    bestsellers.length >= 4 ? bestsellers.slice(0, 4) : PRODUCTS.slice(4, 8);
 
   return (
-    <div className="w-full">
-      {/* C. Hero Campaign with GSAP Animations */}
+    <div className="w-full bg-white">
+      {/* 3. Hero Section: One strong campaign image, concise headline, short line, primary CTA */}
       <HeroCampaign />
 
-      {/* Kinetic Typography Marquee Ribbon */}
-      <KineticMarquee />
+      {/* 4. Featured Categories: Simple image-led cards for Men, Women, Unisex */}
+      <FeaturedCategories />
 
-      {/* D. Shop by Category */}
-      <ShopByCategory />
-
-      {/* E. New Arrivals */}
-      <ProductCarousel
+      {/* 5. New Arrivals: Clean product grid featuring a limited, curated selection */}
+      <CuratedProductGrid
         title="NEW ARRIVALS"
-        subtitle="AUTUMN/WINTER DROP 04"
+        subtitle="AUTUMN / WINTER DROP 04"
         viewAllLink="/new-in"
         products={displayNewArrivals}
       />
 
-      {/* F. Bestsellers */}
-      <ProductCarousel
+      {/* 6. Featured Collection & Bestsellers: Supported by actual products */}
+      <FeaturedDrop />
+
+      <CuratedProductGrid
         title="BESTSELLERS"
-        subtitle="THE SIGNATURE UNIFORM"
+        subtitle="THE PERMANENT SIGNATURE UNIFORM"
         viewAllLink="/bestsellers"
         products={displayBestsellers}
         bgColor="bg-[#FAFAFA]"
       />
 
-      {/* G. Featured Collection or Latest Drop */}
-      <FeaturedDrop />
-
-      {/* H. Trending Products */}
-      <ProductCarousel
-        title="TRENDING ON THE STREETS"
-        subtitle="HIGH ENGAGEMENT STYLES"
-        viewAllLink="/shop"
-        products={displayTrending}
-      />
-
-      {/* I. Shop By Style / Curated Aesthetics */}
-      <ShopByStyle />
-
-      {/* J. Bundle & Promotional Section */}
-      <BundlePromoSection />
-
-      {/* K. Brand Story & Manifesto */}
+      {/* 7. Brand Statement: Short, stylish TEESOULZ brand message */}
       <BrandStorySection />
-
-      {/* L. Trust & Service Strip */}
-      <TrustStrip />
-
-      {/* M. Customer Reviews */}
-      <CustomerReviewsSection />
-
-      {/* O. Instagram UGC Grid */}
-      <InstagramUgcSection />
     </div>
   );
 }
