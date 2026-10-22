@@ -46,12 +46,12 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   return (
     <div
-      className="group flex flex-col bg-white border border-[#E5E5E5] hover:border-black transition-all duration-300"
+      className="group flex flex-col bg-white transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Media Container: Pure 3:4 Aspect Ratio */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#F3F3F3]">
+      {/* Media Container: Clean 3:4 Aspect Ratio like Bonkers Corner */}
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[4px] bg-[#F5F5F5]">
         <Link
           href={`/product/${product.slug}`}
           className="block w-full h-full focus:outline-hidden"
@@ -64,43 +64,43 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             priority={priority}
-            className={`object-cover transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform group-hover:scale-105 ${
+            className={`object-cover object-center transition-transform duration-700 ease-out will-change-transform group-hover:scale-105 ${
               isHovered && hasSecondaryImage ? 'opacity-0' : 'opacity-100'
             }`}
           />
 
-          {/* Secondary Alternate Image */}
+          {/* Secondary Alternate Image on Hover */}
           {hasSecondaryImage && (
             <Image
               src={product.images[1]}
               alt={`${product.name} alternate view`}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className={`object-cover transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform scale-100 group-hover:scale-105 ${
+              className={`object-cover object-center transition-all duration-700 ease-out will-change-transform scale-100 group-hover:scale-105 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
               }`}
             />
           )}
         </Link>
 
-        {/* Minimal Discrete Badge */}
-        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
+        {/* Bonkers Corner Style Badges (Top-Left) */}
+        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none flex flex-col gap-1 items-start">
           {isOutOfStock ? (
-            <span className="bg-[#111111] text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5">
+            <span className="bg-black text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-[2px]">
               Sold Out
             </span>
           ) : product.discountPercent && product.discountPercent > 0 ? (
-            <span className="bg-white text-black border border-black text-[9px] font-bold uppercase tracking-wider px-2 py-0.5">
-              {product.discountPercent}% OFF
+            <span className="bg-red-600 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-[2px]">
+              Save {product.discountPercent}%
             </span>
           ) : product.isNewArrival ? (
-            <span className="bg-[#080808] text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5">
-              New Drop
+            <span className="bg-black text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-[2px]">
+              New In
             </span>
           ) : null}
         </div>
 
-        {/* Wishlist Button */}
+        {/* Wishlist Button (Top-Right) */}
         <button
           type="button"
           onClick={handleWishlistClick}
@@ -114,10 +114,10 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           />
         </button>
 
-        {/* Quick Size Bar: Clean, Accessible */}
+        {/* Quick Size Bar: Slides up on desktop hover */}
         {!isOutOfStock && (
-          <div className="absolute bottom-0 inset-x-0 bg-white/95 border-t border-[#E5E5E5] px-2 py-2 flex items-center justify-center gap-1.5 transition-transform duration-300 md:translate-y-full md:group-hover:translate-y-0 z-20">
-            <span className="text-[9px] font-bold text-[#666666] uppercase mr-1 hidden sm:inline">
+          <div className="absolute bottom-0 inset-x-0 bg-white/95 border-t border-gray-100 px-2 py-2 flex items-center justify-center gap-1.5 transition-all duration-300 md:translate-y-full md:group-hover:translate-y-0 z-20">
+            <span className="text-[9px] font-bold text-gray-500 uppercase mr-1 hidden sm:inline">
               Sizes:
             </span>
             {product.availableSizes.map((sz) => {
@@ -133,12 +133,12 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                   type="button"
                   disabled={!inStock}
                   onClick={(e) => handleQuickAdd(sz, e)}
-                  className={`w-7 h-7 text-[10px] font-bold uppercase transition-all flex items-center justify-center border ${
+                  className={`w-7 h-7 text-[10px] font-bold uppercase transition-all flex items-center justify-center border rounded-[2px] ${
                     isAdded
                       ? 'bg-black text-white border-black'
                       : inStock
-                      ? 'bg-white text-black border-[#CCCCCC] hover:bg-black hover:text-white hover:border-black'
-                      : 'bg-[#F3F3F3] text-[#B8B8B8] border-transparent line-through cursor-not-allowed'
+                      ? 'bg-white text-black border-gray-300 hover:bg-black hover:text-white hover:border-black'
+                      : 'bg-gray-100 text-gray-400 border-transparent line-through cursor-not-allowed'
                   }`}
                   title={inStock ? `Add size ${sz}` : `Size ${sz} sold out`}
                 >
@@ -150,38 +150,30 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         )}
       </div>
 
-      {/* Info Section: Generous Spacing, Clean Typography */}
-      <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between">
-        <div className="space-y-1">
-          {/* Subtitle / Category metadata */}
-          <div className="text-[10px] uppercase font-bold tracking-wider text-[#777777]">
-            <span>{product.fitType || 'Oversized Fit'}</span>
-          </div>
-
-          {/* Product Title */}
+      {/* Info Section: Clean, Left-Aligned typography exactly like Bonkers Corner */}
+      <div className="pt-3 pb-2 flex flex-col flex-1 justify-between">
+        <div>
           <Link
             href={`/product/${product.slug}`}
-            className="text-xs sm:text-sm font-bold text-[#111111] hover:underline line-clamp-2 min-h-[32px] sm:min-h-[40px] block leading-snug"
+            className="text-xs sm:text-sm font-medium text-black hover:text-gray-600 line-clamp-1 block leading-snug transition-colors"
           >
             {product.name}
           </Link>
         </div>
 
         {/* Pricing Row */}
-        <div className="mt-3 pt-2 border-t border-[#F3F3F3] flex items-baseline justify-between">
-          <div className="flex items-baseline gap-2">
-            <span className="text-xs sm:text-sm font-extrabold text-[#080808]">
-              ₹{product.price.toLocaleString('en-IN')}
+        <div className="mt-1 flex items-baseline gap-2 flex-wrap">
+          <span className="text-sm sm:text-base font-bold text-black">
+            ₹{product.price.toLocaleString('en-IN')}
+          </span>
+          {product.mrp > product.price && (
+            <span className="text-xs text-gray-400 line-through">
+              ₹{product.mrp.toLocaleString('en-IN')}
             </span>
-            {product.mrp > product.price && (
-              <span className="text-[10px] sm:text-xs text-[#888888] line-through">
-                ₹{product.mrp.toLocaleString('en-IN')}
-              </span>
-            )}
-          </div>
+          )}
           {product.discountPercent && product.discountPercent > 0 && (
-            <span className="text-[9px] font-bold text-red-600 uppercase tracking-wider">
-              SAVE ₹{(product.mrp - product.price).toLocaleString('en-IN')}
+            <span className="text-[11px] font-semibold text-red-600">
+              ({product.discountPercent}% OFF)
             </span>
           )}
         </div>
