@@ -9,11 +9,8 @@ import MobileNavDrawer from './MobileNavDrawer';
 import { useStore } from '@/context/StoreContext';
 
 const NAV_LINKS = [
-  { name: 'NEW IN', href: '/new-in' },
   { name: 'MEN', href: '/shop?gender=men' },
   { name: 'WOMEN', href: '/shop?gender=women' },
-  { name: 'UNISEX', href: '/shop?gender=unisex' },
-  { name: 'COLLECTIONS', href: '/collections' },
 ];
 
 export default function Header() {
@@ -21,28 +18,29 @@ export default function Header() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-[#E5E5E5] shadow-xs">
-      {/* 1. Slim Minimal Announcement Bar */}
+    // Non-sticky header: scrolls naturally with the page, does not stay pinned
+    <header className="relative z-40 bg-white border-b border-[#E5E5E5]">
+      {/* 1. Scrolling Marquee Announcement Bar */}
       <AnnouncementBar />
 
-      {/* 2. Desktop Header Layout (matching client reference) */}
+      {/* 2. Desktop Header Layout */}
       <div className="hidden lg:block">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          {/* Top Brand Tier: Centered Logo & Brand Name */}
-          <div className="py-5 flex flex-col items-center justify-center text-center">
+          {/* Top Brand Tier: Centered Prominent Logo & Brand Name */}
+          <div className="py-6 flex flex-col items-center justify-center text-center">
             <Link
               href="/"
               className="group inline-flex flex-col items-center focus:outline-hidden"
               aria-label="TEESOULZ Home"
             >
-              {/* Logo in subtle minimal capsule pill */}
-              <div className="px-5 py-1.5 rounded-full bg-[#F3F3F3] border border-[#EBEBEB] transition-transform duration-300 group-hover:scale-105 flex items-center justify-center mb-2">
-                <div className="relative w-12 h-7 flex-shrink-0">
+              {/* Perfectly sized prominent logo inside elegant capsule */}
+              <div className="px-7 py-2.5 rounded-full bg-[#F3F3F3] border border-[#E5E5E5] transition-transform duration-300 group-hover:scale-105 flex items-center justify-center mb-2.5 shadow-2xs">
+                <div className="relative w-20 h-10 flex-shrink-0">
                   <Image
                     src="/teesoulz-logo.png"
-                    alt="TEESOULZ Logo"
+                    alt="TEESOULZ Official Logo"
                     fill
-                    sizes="48px"
+                    sizes="80px"
                     className="object-contain"
                     priority
                   />
@@ -50,12 +48,12 @@ export default function Header() {
               </div>
 
               {/* Brand Name */}
-              <span className="text-xl font-extrabold tracking-[0.25em] text-[#080808] uppercase leading-none">
+              <span className="text-2xl font-black tracking-[0.25em] text-[#080808] uppercase leading-none">
                 TEESOULZ
               </span>
 
               {/* Tagline */}
-              <span className="text-[11px] font-normal text-[#666666] tracking-widest lowercase mt-1">
+              <span className="text-xs font-normal text-[#666666] tracking-[0.2em] lowercase mt-1.5">
                 style your soulz
               </span>
             </Link>
@@ -64,10 +62,10 @@ export default function Header() {
           {/* Thin Hairline Divider */}
           <div className="border-t border-[#E5E5E5]" />
 
-          {/* Center Navigation Row */}
+          {/* Center Navigation Row: Only MEN & WOMEN */}
           <nav
             aria-label="Main Navigation"
-            className="py-3 flex items-center justify-center space-x-10 text-xs font-bold tracking-[0.2em] text-[#111111]"
+            className="py-3.5 flex items-center justify-center space-x-16 text-xs font-bold tracking-[0.25em] text-[#111111]"
           >
             {NAV_LINKS.map((link) => (
               <Link
@@ -142,7 +140,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* 3. Mobile Header Layout (Compact, responsive, clean) */}
+      {/* 3. Mobile Header Layout (Non-sticky, clean, proper logo size) */}
       <div className="lg:hidden px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Left: Mobile Menu & Search */}
@@ -165,25 +163,25 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Center: Logo & Brand Name */}
+          {/* Center: Prominent Logo & Brand Name */}
           <Link
             href="/"
             className="flex flex-col items-center text-center py-0.5"
             aria-label="TEESOULZ Home"
           >
-            <div className="px-3 py-1 rounded-full bg-[#F3F3F3] border border-[#EBEBEB] flex items-center justify-center mb-1">
-              <div className="relative w-9 h-5 flex-shrink-0">
+            <div className="px-4 py-1.5 rounded-full bg-[#F3F3F3] border border-[#E5E5E5] flex items-center justify-center mb-1">
+              <div className="relative w-14 h-7 flex-shrink-0">
                 <Image
                   src="/teesoulz-logo.png"
-                  alt="TEESOULZ Logo"
+                  alt="TEESOULZ Official Logo"
                   fill
-                  sizes="36px"
+                  sizes="56px"
                   className="object-contain"
                   priority
                 />
               </div>
             </div>
-            <span className="text-sm font-extrabold tracking-[0.2em] text-[#080808] uppercase leading-none">
+            <span className="text-sm font-black tracking-[0.2em] text-[#080808] uppercase leading-none">
               TEESOULZ
             </span>
             <span className="text-[9px] text-[#666666] tracking-wider lowercase">
@@ -219,6 +217,17 @@ export default function Header() {
               )}
             </button>
           </div>
+        </div>
+
+        {/* Mobile Navigation Row: MEN & WOMEN */}
+        <div className="border-t border-[#E5E5E5] mt-2 pt-2 flex items-center justify-center space-x-10 text-[11px] font-bold tracking-[0.2em]">
+          <Link href="/shop?gender=men" className="hover:text-black text-[#111111]">
+            MEN
+          </Link>
+          <span className="text-[#CCCCCC]">•</span>
+          <Link href="/shop?gender=women" className="hover:text-black text-[#111111]">
+            WOMEN
+          </Link>
         </div>
       </div>
 

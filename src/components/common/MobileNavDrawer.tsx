@@ -88,11 +88,8 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
             </h5>
             <ul className="space-y-1">
               {[
-                { name: 'NEW IN', href: '/new-in', badge: 'NEW' },
                 { name: 'MEN', href: '/shop?gender=men' },
                 { name: 'WOMEN', href: '/shop?gender=women' },
-                { name: 'UNISEX', href: '/shop?gender=unisex' },
-                { name: 'COLLECTIONS', href: '/collections' },
               ].map((item) => (
                 <li key={item.name}>
                   <Link
@@ -101,13 +98,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                     className="flex items-center justify-between py-2 text-sm font-bold tracking-wider text-[#080808] hover:text-black transition-colors"
                   >
                     <span>{item.name}</span>
-                    {item.badge ? (
-                      <span className="text-[9px] font-extrabold uppercase bg-black text-white px-1.5 py-0.5 rounded">
-                        {item.badge}
-                      </span>
-                    ) : (
-                      <ChevronRight className="w-4 h-4 text-[#CCCCCC]" />
-                    )}
+                    <ChevronRight className="w-4 h-4 text-[#CCCCCC]" />
                   </Link>
                 </li>
               ))}
