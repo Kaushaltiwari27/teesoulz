@@ -15,7 +15,7 @@ export default function BrandStorySection() {
           <div className="lg:col-span-5 grid grid-cols-2 gap-4">
             <div className="relative aspect-[3/4] bg-[#1a1a1a] border border-[#2b2b2b] overflow-hidden mt-6">
               <Image
-                src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=85"
                 alt="TEESOULZ Studio Heavyweight Drape"
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
@@ -24,7 +24,7 @@ export default function BrandStorySection() {
             </div>
             <div className="relative aspect-[3/4] bg-[#1a1a1a] border border-[#2b2b2b] overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=85"
                 alt="TEESOULZ French Terry Construction"
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"

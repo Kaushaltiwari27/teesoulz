@@ -109,7 +109,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
               className="group block relative aspect-[4/3] overflow-hidden bg-[#F3F3F3] border border-[#E5E5E5]"
             >
               <Image
-                src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80"
+                src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=85"
                 alt="NOIR MONOLITH Capsule"
                 fill
                 sizes="300px"
@@ -138,7 +138,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
               className="group block relative aspect-[4/3] overflow-hidden bg-[#F3F3F3] border border-[#E5E5E5]"
             >
               <Image
-                src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=600&q=80"
+                src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=85"
                 alt="CYBER TOKYO Drop"
                 fill
                 sizes="300px"

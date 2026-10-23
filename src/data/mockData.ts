@@ -58,9 +58,9 @@ export const PRODUCTS: Product[] = [
     mrp: 1999,
     discountPercent: 35,
     images: [
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-001-s-blk', sku: 'TS-NOIR-BLK-S', size: 'S', color: 'Pitch Black', colorCode: '#080808', stock: 18 },
@@ -134,8 +134,8 @@ export const PRODUCTS: Product[] = [
     mrp: 2199,
     discountPercent: 36,
     images: [
-      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1503342394128-c104d54dba01?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-002-s-blk', sku: 'TS-CYBER-BLK-S', size: 'S', color: 'Washed Charcoal', colorCode: '#262626', stock: 15 },
@@ -191,8 +191,8 @@ export const PRODUCTS: Product[] = [
     mrp: 3999,
     discountPercent: 32,
     images: [
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-003-s-blk', sku: 'TS-HOOD-BLK-S', size: 'S', color: 'Onyx Black', colorCode: '#0a0a0a', stock: 10 },
@@ -253,8 +253,8 @@ export const PRODUCTS: Product[] = [
     mrp: 3499,
     discountPercent: 28,
     images: [
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-004-s-blk', sku: 'TS-CRG-BLK-S', size: 'S', color: 'Stealth Black', colorCode: '#111111', stock: 8 },
@@ -304,8 +304,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1999,
     discountPercent: 30,
     images: [
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-005-s-gry', sku: 'TS-ACID-GRY-S', size: 'S', color: 'Mineral Grey', colorCode: '#4A4A4A', stock: 12 },
@@ -343,7 +343,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1499,
     discountPercent: 40,
     images: [
-      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-006-u-blk', sku: 'TS-CAP-BLK', size: 'M', color: 'Pitch Black', colorCode: '#080808', stock: 35 },
@@ -381,8 +382,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1799,
     discountPercent: 33,
     images: [
-      'https://images.unsplash.com/photo-1503342394128-c104d54dba01?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-007-xs-blk', sku: 'TS-WCRP-BLK-XS', size: 'XS', color: 'Pure Noir', colorCode: '#080808', stock: 14 },
@@ -418,8 +419,8 @@ export const PRODUCTS: Product[] = [
     mrp: 3299,
     discountPercent: 33,
     images: [
-      'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-008-s-slv', sku: 'TS-CRW-SLV-S', size: 'S', color: 'Heather Ash', colorCode: '#CCCCCC', stock: 9 },
@@ -454,7 +455,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1699,
     discountPercent: 41,
     images: [
-      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-009-u-blk', sku: 'TS-TOTE-BLK', size: 'M', color: 'Raw Noir', colorCode: '#111111', stock: 28 },
@@ -487,8 +489,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1999,
     discountPercent: 32,
     images: [
-      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-010-s-blk', sku: 'TS-SKULL-BLK-S', size: 'S', color: 'Washed Black', colorCode: '#1c1c1c', stock: 11 },
@@ -524,8 +526,8 @@ export const PRODUCTS: Product[] = [
     mrp: 3199,
     discountPercent: 31,
     images: [
-      'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-011-s-blk', sku: 'TS-JOG-BLK-S', size: 'S', color: 'Jet Black', colorCode: '#080808', stock: 8 },
@@ -560,8 +562,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1999,
     discountPercent: 35,
     images: [
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1618354691438-25bc04584c03?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-012-s-wht', sku: 'TS-WHT-S', size: 'S', color: 'Pure White', colorCode: '#FFFFFF', stock: 20 },
@@ -599,8 +601,8 @@ export const PRODUCTS: Product[] = [
     mrp: 2199,
     discountPercent: 36,
     images: [
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-013-s-blk', sku: 'TS-MAT-BLK-S', size: 'S', color: 'Onyx Black', colorCode: '#0A0A0A', stock: 14 },
@@ -639,8 +641,8 @@ export const PRODUCTS: Product[] = [
     mrp: 2299,
     discountPercent: 35,
     images: [
-      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-014-s-gry', sku: 'TS-MIN-GRY-S', size: 'S', color: 'Mineral Grey', colorCode: '#3D3D3D', stock: 12 },
@@ -678,8 +680,8 @@ export const PRODUCTS: Product[] = [
     mrp: 3999,
     discountPercent: 33,
     images: [
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-015-s-blk', sku: 'TS-CARGO-BLK-S', size: 'S', color: 'Stealth Black', colorCode: '#0D0D0D', stock: 10 },
@@ -716,8 +718,8 @@ export const PRODUCTS: Product[] = [
     mrp: 3699,
     discountPercent: 32,
     images: [
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-016-s-blk', sku: 'TS-HZ-BLK-S', size: 'S', color: 'Pitch Black', colorCode: '#080808', stock: 9 },
@@ -754,8 +756,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1799,
     discountPercent: 33,
     images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-017-xs-blk', sku: 'TS-CROP-BLK-XS', size: 'S', color: 'Noir Black', colorCode: '#0D0D0D', stock: 12 },
@@ -792,8 +794,8 @@ export const PRODUCTS: Product[] = [
     mrp: 3999,
     discountPercent: 30,
     images: [
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-018-s-gry', sku: 'TS-CON-GRY-S', size: 'S', color: 'Concrete Grey', colorCode: '#8C8C8C', stock: 8 },
@@ -831,8 +833,8 @@ export const PRODUCTS: Product[] = [
     mrp: 2399,
     discountPercent: 33,
     images: [
-      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1503342394128-c104d54dba01?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1503342394128-c104d54dba01?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-019-s-blk', sku: 'TS-LS-BLK-S', size: 'S', color: 'Washed Black', colorCode: '#1A1A1A', stock: 11 },
@@ -869,8 +871,8 @@ export const PRODUCTS: Product[] = [
     mrp: 4499,
     discountPercent: 33,
     images: [
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-020-s-blk', sku: 'TS-DNM-BLK-28', size: 'S', color: 'Raw Noir', colorCode: '#080808', stock: 7 },
@@ -908,8 +910,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1499,
     discountPercent: 40,
     images: [
-      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-021-u-blk', sku: 'TS-CAP-BLK', size: 'M', color: 'Washed Pitch', colorCode: '#111111', stock: 35 },
@@ -944,8 +946,8 @@ export const PRODUCTS: Product[] = [
     mrp: 2099,
     discountPercent: 33,
     images: [
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-022-s-mbl', sku: 'TS-ACID-S', size: 'S', color: 'Marble Smoke', colorCode: '#4A4A4A', stock: 15 },
@@ -983,8 +985,8 @@ export const PRODUCTS: Product[] = [
     mrp: 2199,
     discountPercent: 34,
     images: [
-      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-023-s-blk', sku: 'TS-GLI-BLK-S', size: 'S', color: 'Jet Black', colorCode: '#080808', stock: 12 },
@@ -1021,8 +1023,8 @@ export const PRODUCTS: Product[] = [
     mrp: 3599,
     discountPercent: 31,
     images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-024-xs-blk', sku: 'TS-WCARGO-XS', size: 'S', color: 'Matte Carbon', colorCode: '#141414', stock: 10 },
@@ -1059,8 +1061,8 @@ export const PRODUCTS: Product[] = [
     mrp: 1599,
     discountPercent: 38,
     images: [
-      'https://images.unsplash.com/photo-1503342394128-c104d54dba01?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-025-s-blk', sku: 'TS-TANK-BLK-S', size: 'S', color: 'Pitch Black', colorCode: '#080808', stock: 14 },
@@ -1097,8 +1099,8 @@ export const PRODUCTS: Product[] = [
     mrp: 4199,
     discountPercent: 31,
     images: [
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-026-s-blk', sku: 'TS-ZIP-BLK-S', size: 'S', color: 'Onyx Noir', colorCode: '#080808', stock: 9 },
@@ -1136,8 +1138,8 @@ export const PRODUCTS: Product[] = [
     mrp: 999,
     discountPercent: 40,
     images: [
-      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-027-u-trio', sku: 'TS-SCK-TRIO', size: 'M', color: 'Monochrome Pack', colorCode: '#333333', stock: 45 },
@@ -1172,8 +1174,8 @@ export const PRODUCTS: Product[] = [
     mrp: 2299,
     discountPercent: 35,
     images: [
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=85',
     ],
     variants: [
       { id: 'v-028-s-blk', sku: 'TS-CHR-BLK-S', size: 'S', color: 'Chrome Noir', colorCode: '#080808', stock: 16 },
@@ -1199,35 +1201,35 @@ export const CATEGORIES_DATA = [
     name: 'Oversized T-Shirts',
     itemCount: '16 Items',
     description: 'Heavyweight drop-shoulder silhouettes crafted from 240-280 GSM combed cotton.',
-    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=85',
   },
   {
     slug: 'graphic-tees',
     name: 'Graphic Tees',
     itemCount: '12 Items',
     description: 'Bold silkscreen backprints, cyberpunk typographic aesthetics and dark art.',
-    image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=1200&q=85',
   },
   {
     slug: 'hoodies-sweatshirts',
     name: 'Hoodies & Sweats',
     itemCount: '9 Items',
     description: '380-420 GSM French Terry loopback cotton for supreme drape and warmth.',
-    image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?auto=format&fit=crop&w=1200&q=85',
   },
   {
     slug: 'bottomwear',
     name: 'Bottomwear',
     itemCount: '8 Items',
     description: 'Tactical parachute pants, cargo trousers and relaxed heavyweight sweatpants.',
-    image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85',
   },
   {
     slug: 'accessories',
     name: 'Accessories',
     itemCount: '6 Items',
     description: '3D embroidered dad caps, 16oz utility totes, and street lifestyle gear.',
-    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=85',
   },
 ];
 
@@ -1237,27 +1239,27 @@ export const COLLECTIONS_DATA = [
     name: 'NOIR MONOLITH',
     tagline: 'Autumn/Winter Capsule Drop 04',
     description: 'A study in stark contrast, monumental silhouettes, and unapologetic black minimalism.',
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
   },
   {
     slug: 'cyber-tokyo',
     name: 'CYBER TOKYO',
     tagline: 'High-Density Archival Graphics',
     description: 'Neo-Tokyo visual cues, industrial typography and dystopia-inspired prints.',
-    image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=85',
   },
   {
     slug: 'heavyweight-essentials',
     name: 'HEAVYWEIGHT ESSENTIALS',
     tagline: '260-420 GSM Permanent Uniform',
     description: 'Seasonless foundational streetwear designed to endure daily rotation for years.',
-    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1200&q=85',
   },
   {
     slug: 'shadow-core',
     name: 'SHADOW CORE',
     tagline: 'Gothic Brutalism & Renaissance Art',
     description: 'Dark visual storytelling on stone-washed and mineral-treated streetwear canvases.',
-    image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1200&q=85',
   },
 ];

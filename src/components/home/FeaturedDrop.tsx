@@ -19,7 +19,7 @@ export default function FeaturedDrop() {
           {/* Editorial Visual with Aperture Reveal */}
           <div className="lg:col-span-7">
             <ParallaxImage
-              src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1600&q=85"
+              src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1600&q=85"
               alt="NOIR MONOLITH Capsule Campaign"
               aspectRatio="aspect-[4/3] sm:aspect-[16/10]"
               className="border border-[#2B2B2B] shadow-2xl"

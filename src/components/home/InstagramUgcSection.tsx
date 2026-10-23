@@ -7,28 +7,28 @@ import { InstagramIcon } from '@/components/common/BrandIcons';
 
 const UGC_LOOKS = [
   {
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=85',
     tag: '@teesoulz / Drop 04',
   },
   {
-    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=85',
     tag: '@teesoulz / Heavyweight Noir',
   },
   {
-    image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=600&q=80',
-    tag: '@teesoulz / Cyber Archival',
+    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=85',
+    tag: '@teesoulz / Raw Aesthetic',
   },
   {
-    image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80',
-    tag: '@teesoulz / 420 GSM Hoodie',
+    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=85',
+    tag: '@teesoulz / Neon Street',
   },
   {
-    image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=800&q=85',
     tag: '@teesoulz / Tactical Parachute',
   },
   {
-    image: 'https://images.unsplash.com/photo-1503342394128-c104d54dba01?auto=format&fit=crop&w=600&q=80',
-    tag: '@teesoulz / Drop Shoulder',
+    image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=85',
+    tag: '@teesoulz / Editorial Fit',
   },
 ];
 
