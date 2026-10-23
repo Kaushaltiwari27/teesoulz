@@ -144,10 +144,9 @@ export default function Header() {
                 <button
                   type="button"
                   onClick={() => setActiveMenu(activeMenu === 'CATEGORIES_3COL' ? null : 'CATEGORIES_3COL')}
-                  className="text-xs xl:text-sm font-extrabold tracking-[0.08em] uppercase text-black hover:text-gray-600 flex items-center gap-2 transition-colors cursor-pointer focus:outline-hidden"
+                  className="text-xs xl:text-sm font-extrabold tracking-[0.08em] uppercase text-black hover:text-gray-600 flex items-center gap-1 transition-colors cursor-pointer focus:outline-hidden"
                   aria-expanded={activeMenu === 'CATEGORIES_3COL'}
                 >
-                  <Menu className="w-4 h-4 text-black stroke-[2.2]" />
                   <span>CATEGORIES</span>
                   <ChevronDown
                     className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-200 ${
