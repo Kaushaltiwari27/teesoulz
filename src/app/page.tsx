@@ -1,5 +1,7 @@
 import React from 'react';
+import CategoryBubbles from '@/components/home/CategoryBubbles';
 import HeroCampaign from '@/components/home/HeroCampaign';
+import OffersPromoStrip from '@/components/home/OffersPromoStrip';
 import FeaturedCategories from '@/components/home/FeaturedCategories';
 import CuratedProductGrid from '@/components/home/CuratedProductGrid';
 import CampaignBanner, { CampaignSlide } from '@/components/home/CampaignBanner';
@@ -81,10 +83,16 @@ export default function HomePage() {
 
   return (
     <div className="w-full bg-white">
-      {/* 1. Hero Section: Auto-rotating campaign slides (Bonkers Corner Style) */}
+      {/* 1. Quick Navigation Stories / Category Bubbles (Bonkers Corner Signature) */}
+      <CategoryBubbles />
+
+      {/* 2. Hero Section: Auto-rotating campaign slides (Bonkers Corner Style) */}
       <HeroCampaign />
 
-      {/* 2. 2-Column Gallery: SHOP MENS & SHOP WOMENS with Explore buttons */}
+      {/* 3. Promotional Offers & Discount Strip */}
+      <OffersPromoStrip />
+
+      {/* 4. 2-Column Gallery: SHOP MENS & SHOP WOMENS with Explore buttons */}
       <FeaturedCategories />
 
       {/* 3. Section #4: New In featured collection with "Shop New Arrivals" */}

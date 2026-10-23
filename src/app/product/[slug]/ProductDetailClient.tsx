@@ -15,6 +15,7 @@ import {
   Star,
   ChevronDown,
   MapPin,
+  Tag,
 } from 'lucide-react';
 import { Product, ProductVariant } from '@/types';
 import { useStore } from '@/context/StoreContext';
@@ -37,6 +38,16 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
   const [quantity, setQuantity] = useState(1);
   const [pincode, setPincode] = useState('');
   const [pincodeResult, setPincodeResult] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const handleCopyCode = (code: string) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(code);
+      setCopiedCode(code);
+      addToast('Coupon Copied', `Coupon code "${code}" copied to clipboard!`, 'success');
+      setTimeout(() => setCopiedCode(null), 3000);
+    }
+  };
 
   // Accordion state
   const [openAccordions, setOpenAccordions] = useState<{ [key: string]: boolean }>({
@@ -79,9 +90,14 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
       return;
     }
 
-    // Delivery calculation
-    const days = cleanPin.startsWith('4') || cleanPin.startsWith('1') ? '2–3' : '3–4';
-    setPincodeResult(`✓ Express Delivery available to ${cleanPin} in ${days} business days. Free delivery.`);
+    // Delivery calculation with dynamic date
+    const today = new Date();
+    const deliveryDate = new Date(today);
+    deliveryDate.setDate(today.getDate() + (cleanPin.startsWith('4') || cleanPin.startsWith('1') ? 3 : 4));
+    const options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+    const formattedDate = deliveryDate.toLocaleDateString('en-IN', options);
+
+    setPincodeResult(`✓ Expected Delivery by ${formattedDate} • Cash On Delivery Available • Free Shipping`);
   };
 
   const handleShare = () => {
@@ -361,6 +377,50 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                 </button>
               </div>
 
+              {/* Bonkers Corner Style: Available Offers & Coupons Card */}
+              <div className="border border-dashed border-[#CCCCCC] p-3.5 bg-[#FAF9F6] space-y-2.5">
+                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#080808]">
+                  <Tag className="w-4 h-4 text-red-600" />
+                  <span>Available Offers &amp; Discounts</span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between bg-white border border-[#E5E5E5] p-2.5 rounded-[3px]">
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-black text-[#080808] font-mono">TEESOULZ10</span>
+                        <span className="text-[9px] font-extrabold uppercase bg-red-100 text-red-700 px-1.5 py-0.2 rounded">
+                          10% OFF
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#666666]">Flat 10% off on your 1st order</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyCode('TEESOULZ10')}
+                      className="text-[10px] font-black uppercase tracking-wider px-3 py-1.5 border border-black hover:bg-black hover:text-white transition-colors"
+                    >
+                      {copiedCode === 'TEESOULZ10' ? 'COPIED' : 'COPY'}
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between bg-white border border-[#E5E5E5] p-2.5 rounded-[3px]">
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-black text-[#080808] font-mono">PREPAID5</span>
+                        <span className="text-[9px] font-extrabold uppercase bg-green-100 text-green-700 px-1.5 py-0.2 rounded">
+                          EXTRA 5% OFF
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#666666]">Instant discount on UPI &amp; Prepaid checkout</p>
+                    </div>
+                    <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 text-green-800 bg-green-50 border border-green-200">
+                      AUTO APPLIED
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               {/* Pincode Delivery Estimator */}
               <div className="p-4 bg-[#FAFAFA] border border-[#E5E5E5] space-y-2">
                 <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-black">
@@ -567,29 +627,53 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
         )}
       </div>
 
-      {/* Mobile Sticky Add to Bag Bar */}
-      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-[#E5E5E5] px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] z-40 lg:hidden flex items-center justify-between gap-3 shadow-[0_-4px_25px_rgba(0,0,0,0.12)]">
-        <div className="flex flex-col">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-sm font-extrabold text-black font-mono">
-              ₹{product.price.toLocaleString('en-IN')}
-            </span>
-            {product.mrp > product.price && (
-              <span className="text-[10px] text-[#888888] line-through">
-                ₹{product.mrp.toLocaleString('en-IN')}
-              </span>
-            )}
+      {/* Mobile Sticky Add to Bag Bar (Bonkers Corner Style) */}
+      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-[#E5E5E5] px-3 sm:px-4 py-2.5 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] z-40 lg:hidden flex items-center justify-between gap-3 shadow-[0_-4px_25px_rgba(0,0,0,0.12)]">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="relative w-10 h-12 rounded bg-[#F3F3F3] overflow-hidden border border-[#E5E5E5] flex-shrink-0">
+            <Image
+              src={product.images[0]}
+              alt={product.name}
+              fill
+              sizes="40px"
+              className="object-cover"
+            />
           </div>
-          <span className="text-[10px] text-[#666666] uppercase font-bold tracking-wider">
-            Size {selectedSize} • {selectedColor}
-          </span>
+          <div className="flex flex-col min-w-0">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-sm font-extrabold text-black font-mono">
+                ₹{product.price.toLocaleString('en-IN')}
+              </span>
+              {product.mrp > product.price && (
+                <span className="text-[10px] text-[#888888] line-through">
+                  ₹{product.mrp.toLocaleString('en-IN')}
+                </span>
+              )}
+            </div>
+            {/* Quick Size Dropdown */}
+            <div className="flex items-center gap-1 mt-0.5">
+              <span className="text-[10px] font-bold text-[#777777] uppercase">Size:</span>
+              <select
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+                aria-label="Select size"
+                className="text-[11px] font-bold text-black bg-[#F5F5F5] border border-[#CCCCCC] rounded px-1.5 py-0.5 focus:outline-hidden"
+              >
+                {product.availableSizes.map((sz) => (
+                  <option key={sz} value={sz}>
+                    {sz}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
         <button
           type="button"
           onClick={handleAddToCart}
           disabled={isOutOfStock}
-          className="flex-1 max-w-[200px] bg-[#080808] text-white py-3 px-4 text-xs font-black uppercase tracking-[0.15em] hover:bg-black transition-all disabled:opacity-40 shadow-md"
+          className="flex-1 max-w-[160px] bg-[#080808] text-white py-3 px-3 text-xs font-black uppercase tracking-wider hover:bg-black transition-all disabled:opacity-40 shadow-md rounded-[2px]"
         >
           {isOutOfStock ? 'Sold Out' : 'Add to Bag'}
         </button>
