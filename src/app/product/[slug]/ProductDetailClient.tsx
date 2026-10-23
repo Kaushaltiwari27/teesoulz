@@ -19,6 +19,7 @@ import {
 import { Product, ProductVariant } from '@/types';
 import { useStore } from '@/context/StoreContext';
 import ProductGrid from '@/components/product/ProductGrid';
+import RecentlyViewedSection from '@/components/home/RecentlyViewedSection';
 
 interface Props {
   product: Product;
@@ -27,7 +28,14 @@ interface Props {
 
 export default function ProductDetailClient({ product, relatedProducts }: Props) {
   const router = useRouter();
-  const { addToCart, toggleWishlist, isInWishlist, openSizeGuide, addToast } = useStore();
+  const { addToCart, toggleWishlist, isInWishlist, openSizeGuide, addToast, addRecentlyViewed } = useStore();
+
+  // Track product in Recently Viewed
+  React.useEffect(() => {
+    if (product) {
+      addRecentlyViewed(product);
+    }
+  }, [product, addRecentlyViewed]);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(product.availableColors[0]?.name || '');
@@ -558,13 +566,23 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
 
         {/* Related Products Carousel/Grid */}
         {relatedProducts.length > 0 && (
-          <div className="pt-16 pb-28 lg:pb-0">
+          <div className="pt-16 pb-12">
             <h3 className="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-black mb-8">
               COMPLETE THE DRAPE: RELATED STYLES
             </h3>
             <ProductGrid products={relatedProducts} />
           </div>
         )}
+
+        {/* Recently Viewed Section on PDP */}
+        <div className="pb-28 lg:pb-12">
+          <RecentlyViewedSection
+            excludeProductId={product.id}
+            title="Recently Viewed"
+            subtitle="Styles you explored earlier in your session"
+            limit={4}
+          />
+        </div>
       </div>
 
       {/* Mobile Sticky Add to Bag Bar */}

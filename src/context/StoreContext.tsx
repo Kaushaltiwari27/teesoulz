@@ -11,7 +11,7 @@ import {
   UserProfile,
   Coupon,
 } from '@/types';
-import { STORE_COUPONS } from '@/data/mockData';
+import { STORE_COUPONS, PRODUCTS } from '@/data/mockData';
 
 export interface ToastMessage {
   id: string;
@@ -79,6 +79,11 @@ interface StoreContextType {
   createOrder: (orderPayload: Omit<Order, 'id' | 'orderNumber' | 'date'>) => Order;
   getOrderById: (orderNumber: string) => Order | undefined;
 
+  // Recently Viewed
+  recentlyViewed: Product[];
+  addRecentlyViewed: (product: Product) => void;
+  clearRecentlyViewed: () => void;
+
   // Toasts
   toasts: ToastMessage[];
   addToast: (title: string, message?: string, type?: 'success' | 'error' | 'info') => void;
@@ -115,6 +120,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [addresses, setAddresses] = useState<ShippingAddress[]>(DEFAULT_ADDRESSES);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Toast helper
@@ -150,6 +156,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       const storedCoupon = localStorage.getItem('teesoulz_coupon');
       if (storedCoupon) setAppliedCoupon(JSON.parse(storedCoupon));
+
+      const storedRecentlyViewed = localStorage.getItem('teesoulz_recently_viewed');
+      if (storedRecentlyViewed) setRecentlyViewed(JSON.parse(storedRecentlyViewed));
     } catch (e) {
       console.error('Failed to parse stored localStorage data', e);
     } finally {
@@ -158,6 +167,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Persist states
+  useEffect(() => {
+    if (!isHydrated) return;
+    try {
+      localStorage.setItem('teesoulz_recently_viewed', JSON.stringify(recentlyViewed));
+    } catch {}
+  }, [recentlyViewed, isHydrated]);
   useEffect(() => {
     if (!isHydrated) return;
     try {
@@ -435,6 +450,17 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     };
 
     setOrders((prev) => [newOrder, ...prev]);
+
+    // Track checked-out items in recently viewed
+    if (orderPayload.items && orderPayload.items.length > 0) {
+      orderPayload.items.forEach((item) => {
+        const prod = PRODUCTS.find((p) => p.id === item.productId || p.slug === item.productSlug);
+        if (prod) {
+          addRecentlyViewed(prod);
+        }
+      });
+    }
+
     clearCart();
     setAppliedCoupon(null);
     try {
@@ -443,6 +469,21 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
     return newOrder;
   };
+
+  const addRecentlyViewed = useCallback((product: Product) => {
+    if (!product || !product.id) return;
+    setRecentlyViewed((prev) => {
+      const filtered = prev.filter((p) => p.id !== product.id);
+      return [product, ...filtered].slice(0, 12);
+    });
+  }, []);
+
+  const clearRecentlyViewed = useCallback(() => {
+    setRecentlyViewed([]);
+    try {
+      localStorage.removeItem('teesoulz_recently_viewed');
+    } catch {}
+  }, []);
 
   const getOrderById = (orderNumber: string) => {
     return orders.find(
@@ -495,6 +536,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         orders,
         createOrder,
         getOrderById,
+        recentlyViewed,
+        addRecentlyViewed,
+        clearRecentlyViewed,
         toasts,
         addToast,
         removeToast,

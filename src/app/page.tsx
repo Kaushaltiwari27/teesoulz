@@ -6,6 +6,7 @@ import CampaignBanner, { CampaignSlide } from '@/components/home/CampaignBanner'
 import EditorialCultureSection from '@/components/home/EditorialCultureSection';
 import CustomerReviewsSection from '@/components/home/CustomerReviewsSection';
 import TrustPerksSection from '@/components/home/TrustPerksSection';
+import RecentlyViewedSection from '@/components/home/RecentlyViewedSection';
 import { PRODUCTS } from '@/data/mockData';
 
 const MID_PAGE_SLIDES: CampaignSlide[] = [
@@ -136,7 +137,10 @@ export default function HomePage() {
         products={displayMens}
       />
 
-      {/* 9. Section #10: Editorial Streetwear Culture Statement (TIME TO GET WEIRD) */}
+      {/* 9. Recently Viewed Archive (Appears automatically for returning users) */}
+      <RecentlyViewedSection />
+
+      {/* 10. Section #10: Editorial Streetwear Culture Statement (TIME TO GET WEIRD) */}
       <EditorialCultureSection />
 
       {/* 10. Section #12: Customer Reviews Carousel (Let Customers Speak For Us) */}
