@@ -152,8 +152,8 @@ export default function CampaignBanner({
                       fill
                       priority={idx === 0}
                       sizes="100vw"
-                      className={`object-cover object-center transition-transform duration-[6000ms] ease-out will-change-transform ${
-                        isActive ? 'scale-105' : 'scale-100'
+                      className={`object-cover object-[center_top] transition-transform duration-[6000ms] ease-out will-change-transform ${
+                        isActive ? 'scale-[1.02]' : 'scale-100'
                       }`}
                     />
 

@@ -12,6 +12,7 @@ interface SlideItem {
   link: string;
   desktopImage: string;
   mobileImage: string;
+  desktopPosition?: string;
 }
 
 const BONKERS_SLIDES: SlideItem[] = [
@@ -20,40 +21,45 @@ const BONKERS_SLIDES: SlideItem[] = [
     title: 'DRIFT 2.0 // NEW IN',
     subtitle: '280 GSM COMPACT YARN OVERSIZED DROP',
     link: '/new-in',
-    desktopImage: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2800&q=90',
+    desktopImage: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2800&h=1400&crop=top&q=90',
     mobileImage: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1080&h=1920&q=90',
+    desktopPosition: 'object-[center_top]',
   },
   {
     id: 'cyber-tokyo',
     title: 'CYBER TOKYO ARCHIVE',
     subtitle: 'DISCHARGE GRAPHICS & RAW ACID WASH',
     link: '/category/graphic-tees',
-    desktopImage: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=2800&q=90',
+    desktopImage: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=2800&h=1400&crop=top&q=90',
     mobileImage: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1080&h=1920&q=90',
+    desktopPosition: 'object-[center_top]',
   },
   {
     id: 'double-fleece',
     title: '400 GSM DOUBLE FLEECE',
     subtitle: 'STRUCTURAL HOODIES & WINTER SWEATSHIRTS',
     link: '/category/hoodies',
-    desktopImage: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=2800&q=90',
+    desktopImage: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=2800&h=1400&crop=top&q=90',
     mobileImage: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1080&h=1920&q=90',
+    desktopPosition: 'object-[center_top]',
   },
   {
     id: 'tactical-bottoms',
     title: 'TACTICAL CARGOS',
     subtitle: 'PARACHUTE BOTTOMS & WIDE-LEG DRAPES',
     link: '/category/bottoms',
-    desktopImage: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=2800&q=90',
+    desktopImage: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=2800&h=1400&crop=top&q=90',
     mobileImage: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1080&h=1920&q=90',
+    desktopPosition: 'object-[center_top]',
   },
   {
     id: 'women-capsule',
     title: 'WOMEN STREET CAPSULE',
     subtitle: 'BOXY BOYFRIEND TEES & CROPPED FITS',
     link: '/shop?gender=women',
-    desktopImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=2800&q=90',
+    desktopImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=2800&h=1400&crop=top&q=90',
     mobileImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1080&h=1920&q=90',
+    desktopPosition: 'object-[center_top]',
   },
 ];
 
@@ -92,7 +98,7 @@ export default function HeroCampaign() {
           Desktop: Full panoramic height (82vh - 86vh)
           Mobile: Full screen story height (82vh)
       */}
-      <div className="relative w-full h-[75vh] sm:h-[84vh] lg:h-[88vh] min-h-[460px] sm:min-h-[520px]">
+      <div className="relative w-full h-[75vh] sm:h-[80vh] lg:h-[84vh] min-h-[460px] max-h-[820px]">
         {BONKERS_SLIDES.map((slide, idx) => {
           const isActive = idx === currentSlide;
           return (
@@ -112,8 +118,8 @@ export default function HeroCampaign() {
                     fill
                     priority={idx === 0 || idx === 1}
                     sizes="100vw"
-                    className={`object-cover object-center transition-transform duration-[6000ms] ease-out will-change-transform ${
-                      isActive ? 'scale-105' : 'scale-100'
+                    className={`object-cover ${slide.desktopPosition || 'object-[center_top]'} transition-transform duration-[6000ms] ease-out will-change-transform ${
+                      isActive ? 'scale-[1.02]' : 'scale-100'
                     }`}
                   />
                 </div>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Check } from 'lucide-react';
+import { Heart, ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
 import { useStore } from '@/context/StoreContext';
 
@@ -13,30 +13,12 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, priority = false }: ProductCardProps) {
-  const { toggleWishlist, isInWishlist, addToCart } = useStore();
-  const [selectedColor] = useState(product.availableColors[0]?.name || '');
+  const { toggleWishlist, isInWishlist } = useStore();
   const [isHovered, setIsHovered] = useState(false);
-  const [addedSize, setAddedSize] = useState<string | null>(null);
 
   const isWishlisted = isInWishlist(product.id);
   const hasSecondaryImage = product.images.length > 1;
   const isOutOfStock = product.totalStock <= 0;
-
-  const handleQuickAdd = (size: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const variant =
-      product.variants.find(
-        (v) => v.size === size && (!selectedColor || v.color === selectedColor)
-      ) || product.variants.find((v) => v.size === size);
-
-    if (variant && variant.stock > 0) {
-      addToCart(product, variant, 1);
-      setAddedSize(size);
-      setTimeout(() => setAddedSize(null), 1500);
-    }
-  };
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -83,7 +65,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           )}
         </Link>
 
-        {/* Bonkers Corner Style Badges (Top-Left) */}
+        {/* Badges (Top-Left) */}
         <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none flex flex-col gap-1 items-start">
           {isOutOfStock ? (
             <span className="bg-black text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-[2px]">
@@ -105,7 +87,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           type="button"
           onClick={handleWishlistClick}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
-          className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs flex items-center justify-center text-black hover:bg-black hover:text-white transition-all shadow-xs z-20 focus:outline-hidden"
+          className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs flex items-center justify-center text-black hover:bg-black hover:text-white transition-all shadow-xs z-20 focus:outline-hidden touch-manipulation"
         >
           <Heart
             className={`w-4 h-4 transition-colors ${
@@ -114,43 +96,19 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           />
         </button>
 
-        {/* Quick Size Bar: Slides up on desktop hover, compact on mobile */}
-        {!isOutOfStock && (
-          <div className="absolute bottom-0 inset-x-0 bg-white/95 border-t border-gray-100 px-1.5 sm:px-2 py-1.5 sm:py-2 flex items-center justify-center gap-1 sm:gap-1.5 transition-all duration-300 md:translate-y-full md:group-hover:translate-y-0 z-20 overflow-x-auto no-scrollbar">
-            <span className="text-[9px] font-bold text-gray-500 uppercase mr-0.5 hidden sm:inline flex-shrink-0">
-              Sizes:
-            </span>
-            {product.availableSizes.map((sz) => {
-              const variant = product.variants.find(
-                (v) => v.size === sz && (!selectedColor || v.color === selectedColor)
-              );
-              const inStock = variant ? variant.stock > 0 : false;
-              const isAdded = addedSize === sz;
-
-              return (
-                <button
-                  key={sz}
-                  type="button"
-                  disabled={!inStock}
-                  onClick={(e) => handleQuickAdd(sz, e)}
-                  className={`w-6 h-6 sm:w-7 sm:h-7 text-[9px] sm:text-[10px] font-bold uppercase transition-all flex items-center justify-center border rounded-[2px] flex-shrink-0 ${
-                    isAdded
-                      ? 'bg-black text-white border-black'
-                      : inStock
-                      ? 'bg-white text-black border-gray-300 hover:bg-black hover:text-white hover:border-black'
-                      : 'bg-gray-100 text-gray-400 border-transparent line-through cursor-not-allowed'
-                  }`}
-                  title={inStock ? `Add size ${sz}` : `Size ${sz} sold out`}
-                >
-                  {isAdded ? <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> : sz}
-                </button>
-              );
-            })}
-          </div>
-        )}
+        {/* Desktop Hover Action: "SHOP NOW →" slides up replacing size selector */}
+        <div className="hidden md:flex absolute bottom-0 inset-x-0 p-2.5 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20 items-center justify-center pointer-events-none group-hover:pointer-events-auto">
+          <Link
+            href={`/product/${product.slug}`}
+            className="w-full bg-[#080808] hover:bg-black text-white py-2.5 px-4 text-xs font-black uppercase tracking-[0.16em] flex items-center justify-center gap-1.5 rounded-[2px] shadow-2xl transition-all duration-200 hover:scale-[1.02] active:scale-95"
+          >
+            <span>{isOutOfStock ? 'View Details' : 'Shop Now'}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
 
-      {/* Info Section: Clean, Left-Aligned typography exactly like Bonkers Corner */}
+      {/* Info Section: Clean typography */}
       <div className="pt-3 pb-2 flex flex-col flex-1 justify-between">
         <div>
           <Link
