@@ -41,16 +41,19 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
       <div className="fixed inset-y-0 left-0 max-w-xs w-full bg-white shadow-2xl flex flex-col z-10 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] animate-in slide-in-from-left">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#E5E5E5]">
-          <Link href="/" onClick={onClose} className="flex items-center py-0.5 focus:outline-hidden" aria-label="TEESOULZ Home">
-            <div className="relative w-20 h-9">
+          <Link href="/" onClick={onClose} className="flex items-center gap-2 py-0.5 focus:outline-hidden" aria-label="TEESOULZ Home">
+            <div className="relative w-8 h-6 flex-shrink-0">
               <Image
                 src="/teesoulz-logo.png"
                 alt="TEESOULZ"
                 fill
-                sizes="80px"
+                sizes="32px"
                 className="object-contain"
               />
             </div>
+            <span className="font-black tracking-tight text-lg text-black uppercase font-sans">
+              TEESOULZ
+            </span>
           </Link>
           <button
             onClick={onClose}
@@ -89,7 +92,6 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
               {[
                 { name: 'WOMEN', href: '/shop?gender=women' },
                 { name: 'MEN', href: '/shop?gender=men' },
-                { name: 'ACCESSORIES', href: '/shop?category=accessories' },
               ].map((item) => (
                 <li key={item.name}>
                   <Link
@@ -99,6 +101,34 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                   >
                     <span>{item.name}</span>
                     <ChevronRight className="w-4 h-4 text-[#CCCCCC]" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Sub Sections: Hoodies, Sweatshirt, Lower, Oversize Tees, Regular Tees, Polos */}
+          <div className="border-b border-[#E5E5E5] pb-4">
+            <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#888888] mb-2.5">
+              CATEGORIES
+            </h5>
+            <ul className="space-y-1">
+              {[
+                { name: 'Hoodies', href: '/category/hoodies-sweatshirts' },
+                { name: 'Sweatshirt', href: '/category/hoodies-sweatshirts' },
+                { name: 'Lower', href: '/category/bottomwear' },
+                { name: 'Oversize Tees', href: '/category/oversized-t-shirts' },
+                { name: 'Regular Tees', href: '/category/graphic-tees' },
+                { name: 'Polos', href: '/shop?search=polo' },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    onClick={onClose}
+                    className="flex items-center justify-between py-1.5 text-xs font-semibold text-[#222222] hover:text-black hover:translate-x-1 transition-all"
+                  >
+                    <span>{item.name}</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-[#CCCCCC]" />
                   </Link>
                 </li>
               ))}
