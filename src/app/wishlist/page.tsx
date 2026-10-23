@@ -85,7 +85,7 @@ export default function WishlistPage() {
                   </button>
                 </div>
 
-                <div className="p-4 flex flex-col flex-1 justify-between">
+                <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#888888]">
                       {item.category.replace('-', ' ')}
@@ -108,12 +108,12 @@ export default function WishlistPage() {
                     </div>
                   </div>
 
-                  <div className="pt-4 mt-3 border-t border-[#F3F3F3]">
+                  <div className="pt-3 sm:pt-4 mt-2 sm:mt-3 border-t border-[#F3F3F3]">
                     <button
                       type="button"
                       onClick={() => handleAddToCart(item.productId)}
                       disabled={!item.inStock}
-                      className="w-full bg-[#080808] text-white py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-black transition-colors flex items-center justify-center gap-1.5 disabled:opacity-40"
+                      className="w-full bg-[#080808] text-white py-2 sm:py-2.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider hover:bg-black transition-colors flex items-center justify-center gap-1.5 disabled:opacity-40 touch-manipulation"
                     >
                       <ShoppingBag className="w-3.5 h-3.5" />
                       <span>{item.inStock ? 'Move to Bag' : 'Out of Stock'}</span>

@@ -67,7 +67,7 @@ export default function CartDrawer() {
       {/* Drawer Panel */}
       <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col z-10 transition-transform duration-300 animate-in slide-in-from-right">
         {/* Drawer Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5E5E5]">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#E5E5E5]">
           <div className="flex items-center gap-2">
             <h3 className="text-base font-bold uppercase tracking-tight text-[#080808]">
               Your Bag
@@ -86,7 +86,7 @@ export default function CartDrawer() {
         </div>
 
         {/* Free Shipping Progress Indicator */}
-        <div className="bg-[#FAFAFA] px-6 py-3 border-b border-[#E5E5E5]">
+        <div className="bg-[#FAFAFA] px-4 sm:px-6 py-2.5 sm:py-3 border-b border-[#E5E5E5]">
           {amountNeededForFreeShipping > 0 ? (
             <p className="text-xs text-[#333333]">
               Add <span className="font-bold text-[#080808]">₹{amountNeededForFreeShipping}</span> more for{' '}
@@ -106,7 +106,7 @@ export default function CartDrawer() {
         </div>
 
         {/* Item List / Empty State */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 divide-y divide-[#E5E5E5]">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-3 sm:py-4 divide-y divide-[#E5E5E5]">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center py-12">
               <div className="w-16 h-16 rounded-full bg-[#F3F3F3] flex items-center justify-center mb-4">
@@ -217,7 +217,7 @@ export default function CartDrawer() {
 
         {/* Footer / Summary */}
         {cart.length > 0 && (
-          <div className="border-t border-[#E5E5E5] p-6 bg-[#FAFAFA] space-y-4">
+          <div className="border-t border-[#E5E5E5] p-4 sm:p-6 bg-[#FAFAFA] space-y-3 sm:space-y-4">
             {/* Promo code input */}
             <div>
               {appliedCoupon ? (

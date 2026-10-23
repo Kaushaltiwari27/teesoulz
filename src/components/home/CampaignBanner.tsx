@@ -40,7 +40,7 @@ export default function CampaignBanner({
           className="group relative block w-full overflow-hidden rounded-[4px] sm:rounded-[8px]"
         >
           {/* Banner Container */}
-          <div className="relative aspect-[16/7] sm:aspect-[21/9] w-full overflow-hidden bg-black">
+          <div className="relative aspect-[4/3] sm:aspect-[16/7] md:aspect-[21/9] min-h-[260px] sm:min-h-0 w-full overflow-hidden bg-black">
             {/* Desktop Image */}
             <Image
               src={desktopImage}
@@ -51,21 +51,21 @@ export default function CampaignBanner({
             />
 
             {/* Subtle Gradient Overlay */}
-            <div className="absolute inset-0 bg-black/25 group-hover:bg-black/35 transition-colors duration-300" />
+            <div className="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition-colors duration-300" />
 
             {/* Content Overlay */}
-            <div className={`absolute bottom-6 sm:bottom-10 z-10 flex flex-col ${alignClasses}`}>
+            <div className={`absolute bottom-5 sm:bottom-10 z-10 flex flex-col px-3 sm:px-0 ${alignClasses}`}>
               {title && (
-                <h3 className="text-2xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-white drop-shadow-md mb-2">
+                <h3 className="text-xl sm:text-3xl md:text-5xl font-black uppercase tracking-tight text-white drop-shadow-md mb-1.5 sm:mb-2">
                   {title}
                 </h3>
               )}
               {subtitle && (
-                <p className="text-xs sm:text-base text-gray-200 font-medium max-w-lg mb-4 drop-shadow-sm">
+                <p className="text-xs sm:text-base text-gray-200 font-medium max-w-lg mb-3 sm:mb-4 drop-shadow-sm line-clamp-2 sm:line-clamp-none">
                   {subtitle}
                 </p>
               )}
-              <span className="inline-flex items-center justify-center px-7 py-2.5 sm:px-8 sm:py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white border border-white rounded-[4px] bg-black/30 backdrop-blur-xs transition-all duration-300 group-hover:bg-white group-hover:text-black">
+              <span className="inline-flex items-center justify-center px-6 py-2 sm:px-8 sm:py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white border border-white rounded-[4px] bg-black/30 backdrop-blur-xs transition-all duration-300 group-hover:bg-white group-hover:text-black">
                 {buttonText}
               </span>
             </div>

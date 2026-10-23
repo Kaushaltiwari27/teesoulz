@@ -114,17 +114,17 @@ export default function AccountPage() {
 
         {/* Dashboard Layout: Sidebar Tabs + Content Panel */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Sidebar Navigation */}
-          <div className="lg:col-span-3 space-y-1">
+          {/* Sidebar Navigation: Horizontal scrollable tabs on mobile, vertical sidebar on desktop */}
+          <div className="lg:col-span-3 flex lg:flex-col overflow-x-auto no-scrollbar gap-2 lg:gap-0 lg:space-y-1 pb-1 lg:pb-0">
             <button
               onClick={() => setActiveTab('orders')}
-              className={`w-full flex items-center justify-between px-4 py-3 text-xs font-bold uppercase tracking-wider border transition-colors ${
+              className={`flex-shrink-0 whitespace-nowrap lg:w-full flex items-center justify-between px-4 py-2.5 sm:py-3 text-xs font-bold uppercase tracking-wider border transition-colors ${
                 activeTab === 'orders'
                   ? 'bg-black text-white border-black'
                   : 'bg-white text-[#444444] border-[#E5E5E5] hover:border-black'
               }`}
             >
-              <span className="flex items-center gap-2.5">
+              <span className="flex items-center gap-2">
                 <Package className="w-4 h-4" />
                 <span>Orders ({orders.length})</span>
               </span>
@@ -132,13 +132,13 @@ export default function AccountPage() {
 
             <button
               onClick={() => setActiveTab('addresses')}
-              className={`w-full flex items-center justify-between px-4 py-3 text-xs font-bold uppercase tracking-wider border transition-colors ${
+              className={`flex-shrink-0 whitespace-nowrap lg:w-full flex items-center justify-between px-4 py-2.5 sm:py-3 text-xs font-bold uppercase tracking-wider border transition-colors ${
                 activeTab === 'addresses'
                   ? 'bg-black text-white border-black'
                   : 'bg-white text-[#444444] border-[#E5E5E5] hover:border-black'
               }`}
             >
-              <span className="flex items-center gap-2.5">
+              <span className="flex items-center gap-2">
                 <MapPin className="w-4 h-4" />
                 <span>Address Book ({addresses.length})</span>
               </span>
@@ -146,26 +146,26 @@ export default function AccountPage() {
 
             <Link
               href="/wishlist"
-              className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold uppercase tracking-wider bg-white text-[#444444] border border-[#E5E5E5] hover:border-black transition-colors"
+              className="flex-shrink-0 whitespace-nowrap lg:w-full flex items-center justify-between px-4 py-2.5 sm:py-3 text-xs font-bold uppercase tracking-wider bg-white text-[#444444] border border-[#E5E5E5] hover:border-black transition-colors"
             >
-              <span className="flex items-center gap-2.5">
+              <span className="flex items-center gap-2">
                 <Heart className="w-4 h-4" />
                 <span>Wishlist</span>
               </span>
-              <span className="text-xs bg-[#F3F3F3] text-black px-2 py-0.5 rounded-full font-bold">
+              <span className="text-xs bg-[#F3F3F3] text-black px-2 py-0.5 rounded-full font-bold ml-2">
                 {wishlistCount}
               </span>
             </Link>
 
             <button
               onClick={() => setActiveTab('profile')}
-              className={`w-full flex items-center justify-between px-4 py-3 text-xs font-bold uppercase tracking-wider border transition-colors ${
+              className={`flex-shrink-0 whitespace-nowrap lg:w-full flex items-center justify-between px-4 py-2.5 sm:py-3 text-xs font-bold uppercase tracking-wider border transition-colors ${
                 activeTab === 'profile'
                   ? 'bg-black text-white border-black'
                   : 'bg-white text-[#444444] border-[#E5E5E5] hover:border-black'
               }`}
             >
-              <span className="flex items-center gap-2.5">
+              <span className="flex items-center gap-2">
                 <User className="w-4 h-4" />
                 <span>Account Profile</span>
               </span>

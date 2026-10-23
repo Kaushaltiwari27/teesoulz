@@ -406,14 +406,14 @@ export default function Header() {
       </div>
 
       {/* 3. Mobile Navigation Header (Clean Light Styling) */}
-      <div className="lg:hidden px-4 py-3.5 border-t border-gray-100">
+      <div className="lg:hidden px-3 sm:px-4 py-2.5 sm:py-3 border-t border-gray-100 relative">
         <div className="flex items-center justify-between">
           {/* Left: Mobile Menu & Search Button */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 z-10">
             <button
               type="button"
               onClick={() => setIsMobileNavOpen(true)}
-              className="p-1.5 text-black hover:text-gray-600 focus:outline-hidden"
+              className="p-2 -ml-1 text-black hover:text-gray-600 focus:outline-hidden touch-manipulation"
               aria-label="Open navigation menu"
             >
               <Menu className="w-5 h-5" />
@@ -421,41 +421,43 @@ export default function Header() {
             <button
               type="button"
               onClick={openSearch}
-              className="p-1.5 text-black hover:text-gray-600 focus:outline-hidden"
+              className="p-2 text-black hover:text-gray-600 focus:outline-hidden touch-manipulation"
               aria-label="Search products"
             >
               <Search className="w-4.5 h-4.5" />
             </button>
           </div>
 
-          {/* Center: Brand Logo */}
-          <Link
-            href="/"
-            className="flex items-center justify-center py-0.5 focus:outline-hidden"
-            aria-label="TEESOULZ Home"
-          >
-            <div className="relative w-20 h-9">
-              <Image
-                src="/teesoulz-logo.png"
-                alt="TEESOULZ"
-                fill
-                priority
-                sizes="80px"
-                className="object-contain"
-              />
-            </div>
-          </Link>
+          {/* Center: Brand Logo - Mathematically centered across all device screens */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
+            <Link
+              href="/"
+              className="flex items-center justify-center py-0.5 focus:outline-hidden"
+              aria-label="TEESOULZ Home"
+            >
+              <div className="relative w-20 h-9 sm:w-24 sm:h-10">
+                <Image
+                  src="/teesoulz-logo.png"
+                  alt="TEESOULZ"
+                  fill
+                  priority
+                  sizes="(max-width: 640px) 80px, 96px"
+                  className="object-contain"
+                />
+              </div>
+            </Link>
+          </div>
 
           {/* Right: Wishlist & Bag */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 z-10">
             <Link
               href="/wishlist"
               aria-label="Wishlist"
-              className="relative p-1.5 text-black hover:text-gray-600 focus:outline-hidden"
+              className="relative p-2 text-black hover:text-gray-600 focus:outline-hidden touch-manipulation"
             >
               <Heart className="w-4.5 h-4.5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-black text-white text-[8px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-black text-white text-[8px] font-bold rounded-full flex items-center justify-center pointer-events-none">
                   {wishlistCount}
                 </span>
               )}
@@ -465,11 +467,11 @@ export default function Header() {
               type="button"
               onClick={() => setIsCartOpen(true)}
               aria-label="Shopping bag"
-              className="relative p-1.5 text-black hover:text-gray-600 focus:outline-hidden"
+              className="relative p-2 -mr-1 text-black hover:text-gray-600 focus:outline-hidden touch-manipulation"
             >
               <ShoppingBag className="w-4.5 h-4.5" />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-black text-white text-[8px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-black text-white text-[8px] font-bold rounded-full flex items-center justify-center pointer-events-none">
                   {cartCount}
                 </span>
               )}

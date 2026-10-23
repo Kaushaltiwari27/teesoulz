@@ -92,7 +92,7 @@ export default function HeroCampaign() {
           Desktop: Full panoramic height (82vh - 86vh)
           Mobile: Full screen story height (82vh)
       */}
-      <div className="relative w-full h-[80vh] sm:h-[84vh] lg:h-[88vh] min-h-[520px]">
+      <div className="relative w-full h-[75vh] sm:h-[84vh] lg:h-[88vh] min-h-[460px] sm:min-h-[520px]">
         {BONKERS_SLIDES.map((slide, idx) => {
           const isActive = idx === currentSlide;
           return (
@@ -151,15 +151,15 @@ export default function HeroCampaign() {
                   </span>
 
                   {/* Split-text style H1 Heading */}
-                  <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-none drop-shadow-lg font-sans">
+                  <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-none drop-shadow-lg font-sans">
                     {slide.title}
                   </h2>
 
                   {/* Solid White Button (Bonkers Corner Style) */}
-                  <div className="pt-2">
+                  <div className="pt-1.5 sm:pt-2">
                     <Link
                       href={slide.link}
-                      className="inline-flex items-center justify-center px-8 sm:px-10 py-3 sm:py-3.5 bg-white text-black hover:bg-[#EAEAEA] font-black text-xs sm:text-sm uppercase tracking-wider rounded-[10px] shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95"
+                      className="inline-flex items-center justify-center px-6 sm:px-10 py-2.5 sm:py-3.5 bg-white text-black hover:bg-[#EAEAEA] font-black text-xs sm:text-sm uppercase tracking-wider rounded-[8px] sm:rounded-[10px] shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 touch-manipulation"
                       role="button"
                       title="Shop Now"
                     >
@@ -181,12 +181,12 @@ export default function HeroCampaign() {
         })}
       </div>
 
-      {/* Manual Left/Right Navigation Arrows */}
+      {/* Manual Left/Right Navigation Arrows - Hidden on extra-small mobile for maximum clean viewport */}
       <button
         type="button"
         onClick={prevSlide}
         aria-label="Previous Slide"
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/50 hover:bg-black text-white border border-white/30 flex items-center justify-center backdrop-blur-xs transition-all hover:scale-110 active:scale-95 focus:outline-hidden shadow-lg"
+        className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/50 hover:bg-black text-white border border-white/30 items-center justify-center backdrop-blur-xs transition-all hover:scale-110 active:scale-95 focus:outline-hidden shadow-lg touch-manipulation"
       >
         <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
       </button>
@@ -195,7 +195,7 @@ export default function HeroCampaign() {
         type="button"
         onClick={nextSlide}
         aria-label="Next Slide"
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/50 hover:bg-black text-white border border-white/30 flex items-center justify-center backdrop-blur-xs transition-all hover:scale-110 active:scale-95 focus:outline-hidden shadow-lg"
+        className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/50 hover:bg-black text-white border border-white/30 items-center justify-center backdrop-blur-xs transition-all hover:scale-110 active:scale-95 focus:outline-hidden shadow-lg touch-manipulation"
       >
         <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
       </button>

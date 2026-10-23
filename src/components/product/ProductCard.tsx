@@ -114,10 +114,10 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           />
         </button>
 
-        {/* Quick Size Bar: Slides up on desktop hover */}
+        {/* Quick Size Bar: Slides up on desktop hover, compact on mobile */}
         {!isOutOfStock && (
-          <div className="absolute bottom-0 inset-x-0 bg-white/95 border-t border-gray-100 px-2 py-2 flex items-center justify-center gap-1.5 transition-all duration-300 md:translate-y-full md:group-hover:translate-y-0 z-20">
-            <span className="text-[9px] font-bold text-gray-500 uppercase mr-1 hidden sm:inline">
+          <div className="absolute bottom-0 inset-x-0 bg-white/95 border-t border-gray-100 px-1.5 sm:px-2 py-1.5 sm:py-2 flex items-center justify-center gap-1 sm:gap-1.5 transition-all duration-300 md:translate-y-full md:group-hover:translate-y-0 z-20 overflow-x-auto no-scrollbar">
+            <span className="text-[9px] font-bold text-gray-500 uppercase mr-0.5 hidden sm:inline flex-shrink-0">
               Sizes:
             </span>
             {product.availableSizes.map((sz) => {
@@ -133,7 +133,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                   type="button"
                   disabled={!inStock}
                   onClick={(e) => handleQuickAdd(sz, e)}
-                  className={`w-7 h-7 text-[10px] font-bold uppercase transition-all flex items-center justify-center border rounded-[2px] ${
+                  className={`w-6 h-6 sm:w-7 sm:h-7 text-[9px] sm:text-[10px] font-bold uppercase transition-all flex items-center justify-center border rounded-[2px] flex-shrink-0 ${
                     isAdded
                       ? 'bg-black text-white border-black'
                       : inStock
@@ -142,7 +142,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                   }`}
                   title={inStock ? `Add size ${sz}` : `Size ${sz} sold out`}
                 >
-                  {isAdded ? <Check className="w-3 h-3" /> : sz}
+                  {isAdded ? <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> : sz}
                 </button>
               );
             })}

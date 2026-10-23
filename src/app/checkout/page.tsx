@@ -153,7 +153,7 @@ export default function CheckoutPage() {
     <div className="bg-[#FAFAFA] min-h-screen py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Checkout Header */}
-        <div className="flex items-center justify-between pb-6 mb-8 border-b border-[#E5E5E5]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 sm:pb-6 mb-6 sm:mb-8 border-b border-[#E5E5E5] gap-3">
           <Link href="/" className="flex items-center gap-2">
             <div className="relative w-9 h-7">
               <Image src="/teesoulz-logo.png" alt="TEESOULZ" fill sizes="36px" className="object-contain" />
@@ -161,7 +161,7 @@ export default function CheckoutPage() {
             <span className="font-extrabold tracking-tight text-lg text-black">TEESOULZ</span>
           </Link>
           <div className="flex items-center gap-2 text-xs text-[#666666]">
-            <Lock className="w-3.5 h-3.5 text-black" />
+            <Lock className="w-3.5 h-3.5 text-black flex-shrink-0" />
             <span>256-Bit Encrypted Secure Checkout</span>
           </div>
         </div>
@@ -192,7 +192,7 @@ export default function CheckoutPage() {
           {/* Form Column (7 cols) */}
           <div className="lg:col-span-7">
             {step === 'shipping' ? (
-              <form onSubmit={handleContinueToPayment} className="bg-white border border-[#E5E5E5] p-6 sm:p-8 space-y-6">
+              <form onSubmit={handleContinueToPayment} className="bg-white border border-[#E5E5E5] p-4 sm:p-8 space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-[#E5E5E5]">
                   <h2 className="text-base font-bold uppercase tracking-wider text-black">
                     Delivery Address
@@ -493,7 +493,7 @@ export default function CheckoutPage() {
 
           {/* Order Summary Column (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="bg-white border border-[#E5E5E5] p-6 space-y-4">
+            <div className="bg-white border border-[#E5E5E5] p-4 sm:p-6 space-y-4">
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-black pb-3 border-b border-[#E5E5E5]">
                 Order Items ({cart.length})
               </h3>

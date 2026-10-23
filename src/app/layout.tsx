@@ -198,7 +198,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col font-sans bg-white text-[#111111] antialiased">
+      <body className="min-h-screen flex flex-col font-sans bg-white text-[#111111] antialiased overflow-x-hidden w-full selection:bg-black selection:text-white">
         <StoreProvider>
           <Header />
           <main className="flex-1">{children}</main>

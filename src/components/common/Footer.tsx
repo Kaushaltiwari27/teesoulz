@@ -251,14 +251,14 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar: Payment Marks & Copyright */}
-        <div className="pt-8 border-t border-[#222222] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#888888]">
-          <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-[#B8B8B8]" />
+        <div className="pt-8 border-t border-[#222222] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#888888] text-center md:text-left">
+          <div className="flex items-center justify-center md:justify-start gap-2">
+            <Shield className="w-4 h-4 text-[#B8B8B8] flex-shrink-0" />
             <span>© {currentYear} TEESOULZ APPAREL PVT LTD. All Rights Reserved.</span>
           </div>
 
           {/* Real Supported Payment Methods Badges */}
-          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 text-[10px] font-bold uppercase tracking-wider">
             <span className="px-2 py-1 bg-[#181818] border border-[#2B2B2B] rounded text-white">
               UPI / GPay / PhonePe
             </span>

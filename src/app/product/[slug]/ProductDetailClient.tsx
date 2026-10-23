@@ -133,7 +133,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
 
             {/* Thumbnail Gallery Row */}
             {product.images.length > 1 && (
-              <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+              <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3">
                 {product.images.map((img, idx) => (
                   <button
                     key={idx}
@@ -270,7 +270,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
                         type="button"
                         disabled={stock <= 0}
                         onClick={() => setSelectedSize(sz)}
-                        className={`w-14 h-12 text-xs font-bold uppercase border transition-all ${
+                        className={`w-12 sm:w-14 h-11 sm:h-12 text-xs font-bold uppercase border transition-all ${
                           isSelected
                             ? 'bg-[#080808] text-white border-[#080808]'
                             : stock > 0
@@ -558,7 +558,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
 
         {/* Related Products Carousel/Grid */}
         {relatedProducts.length > 0 && (
-          <div className="pt-16 pb-20 lg:pb-0">
+          <div className="pt-16 pb-28 lg:pb-0">
             <h3 className="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-black mb-8">
               COMPLETE THE DRAPE: RELATED STYLES
             </h3>
@@ -568,7 +568,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Props)
       </div>
 
       {/* Mobile Sticky Add to Bag Bar */}
-      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-[#E5E5E5] p-3 z-40 lg:hidden flex items-center justify-between gap-3 shadow-[0_-4px_25px_rgba(0,0,0,0.12)]">
+      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-[#E5E5E5] px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] z-40 lg:hidden flex items-center justify-between gap-3 shadow-[0_-4px_25px_rgba(0,0,0,0.12)]">
         <div className="flex flex-col">
           <div className="flex items-baseline gap-1.5">
             <span className="text-sm font-extrabold text-black font-mono">
