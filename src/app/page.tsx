@@ -2,11 +2,59 @@ import React from 'react';
 import HeroCampaign from '@/components/home/HeroCampaign';
 import FeaturedCategories from '@/components/home/FeaturedCategories';
 import CuratedProductGrid from '@/components/home/CuratedProductGrid';
-import CampaignBanner from '@/components/home/CampaignBanner';
+import CampaignBanner, { CampaignSlide } from '@/components/home/CampaignBanner';
 import EditorialCultureSection from '@/components/home/EditorialCultureSection';
 import CustomerReviewsSection from '@/components/home/CustomerReviewsSection';
 import TrustPerksSection from '@/components/home/TrustPerksSection';
 import { PRODUCTS } from '@/data/mockData';
+
+const MID_PAGE_SLIDES: CampaignSlide[] = [
+  {
+    id: 'noir-monolith',
+    title: 'NOIR MONOLITH CAPSULE',
+    subtitle: '280 GSM architectural drape, dropped shoulders & brutalist monochrome graphics',
+    buttonText: 'EXPLORE',
+    buttonLink: '/shop?gender=men',
+    desktopImage: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=2400&q=85',
+    altText: 'TEESOULZ Men Heavyweight Capsule',
+  },
+  {
+    id: 'cyber-tokyo',
+    title: 'CYBER TOKYO STREETWEAR',
+    subtitle: 'Japanese discharge print aesthetics, oversized boxy cuts & acid-treated textiles',
+    buttonText: 'EXPLORE DROP',
+    buttonLink: '/collections/cyber-tokyo',
+    desktopImage: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=2400&q=85',
+    altText: 'TEESOULZ Cyber Tokyo Collection',
+  },
+  {
+    id: 'double-fleece',
+    title: '400 GSM DOUBLE FLEECE',
+    subtitle: 'Heavyweight drop-shoulder structural hoodies with pre-shrunk Lycra ribbed cuffs',
+    buttonText: 'SHOP HOODIES',
+    buttonLink: '/category/hoodies',
+    desktopImage: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=2400&q=85',
+    altText: 'TEESOULZ Double Fleece Hoodies',
+  },
+  {
+    id: 'parachute-cargos',
+    title: 'PARACHUTE CARGO SYSTEMS',
+    subtitle: 'Tactical 6-pocket bottoms with bungee cinching and architectural drape',
+    buttonText: 'EXPLORE BOTTOMS',
+    buttonLink: '/category/bottoms',
+    desktopImage: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2400&q=85',
+    altText: 'TEESOULZ Parachute Cargo Systems',
+  },
+  {
+    id: 'acid-wash',
+    title: 'RAW ACID WASH ARCHIVE',
+    subtitle: 'Custom enzyme-washed monochrome silhouettes with vintage distressed hems',
+    buttonText: 'EXPLORE ARCHIVE',
+    buttonLink: '/bestsellers',
+    desktopImage: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=2400&q=85',
+    altText: 'TEESOULZ Raw Acid Wash Archive',
+  },
+];
 
 export default function HomePage() {
   // 1. Curated New Arrivals (8 items)
@@ -76,15 +124,8 @@ export default function HomePage() {
         products={displayWomens}
       />
 
-      {/* 7. Mid-page Campaign Banner (Men's / Heavyweight Drop) */}
-      <CampaignBanner
-        title="NOIR MONOLITH CAPSULE"
-        subtitle="280 GSM architectural drape, dropped shoulders & brutalist monochrome graphics"
-        buttonText="EXPLORE"
-        buttonLink="/shop?gender=men"
-        desktopImage="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=2400&q=85"
-        altText="TEESOULZ Men Heavyweight Capsule"
-      />
+      {/* 7. Mid-page Campaign Banner Slideshow (Max 5 slides, auto-changes every 5 seconds) */}
+      <CampaignBanner slides={MID_PAGE_SLIDES} autoplayInterval={5000} />
 
       {/* 8. Section #9: Shop Men featured collection with "Shop Mens" */}
       <CuratedProductGrid
