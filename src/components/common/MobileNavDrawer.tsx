@@ -40,14 +40,17 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
       {/* Drawer */}
       <div className="fixed inset-y-0 left-0 max-w-xs w-full bg-white shadow-2xl flex flex-col z-10 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] animate-in slide-in-from-left">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E5E5E5]">
-          <Link href="/" onClick={onClose} className="flex flex-col text-left py-0.5" aria-label="TEESOULZ CREATION">
-            <span className="text-base font-black tracking-[0.2em] uppercase text-black leading-none">
-              TEESOULZ
-            </span>
-            <span className="text-[9px] font-black tracking-[0.35em] uppercase text-[#666666] leading-none mt-0.5">
-              CREATION
-            </span>
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#E5E5E5]">
+          <Link href="/" onClick={onClose} className="flex items-center py-0.5 focus:outline-hidden" aria-label="TEESOULZ Home">
+            <div className="relative w-20 h-9">
+              <Image
+                src="/teesoulz-logo.png"
+                alt="TEESOULZ"
+                fill
+                sizes="80px"
+                className="object-contain"
+              />
+            </div>
           </Link>
           <button
             onClick={onClose}

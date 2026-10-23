@@ -221,18 +221,22 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* Zone 2 (Center): TEESOULZ CREATION Clean Typography */}
+            {/* Zone 2 (Center): Brand Logo */}
             <Link
               href="/"
-              className="flex flex-col items-center justify-center text-center py-1 group select-none focus:outline-hidden"
-              aria-label="TEESOULZ CREATION Home"
+              className="flex items-center justify-center py-1 group select-none focus:outline-hidden"
+              aria-label="TEESOULZ Home"
             >
-              <span className="text-xl xl:text-2xl font-black tracking-[0.25em] uppercase text-black leading-none group-hover:text-gray-700 transition-colors">
-                TEESOULZ
-              </span>
-              <span className="text-[9px] xl:text-[10px] font-bold tracking-[0.45em] uppercase text-gray-500 leading-none mt-1 group-hover:text-black transition-colors">
-                CREATION
-              </span>
+              <div className="relative w-28 h-12 transition-transform duration-200 group-hover:scale-105">
+                <Image
+                  src="/teesoulz-logo.png"
+                  alt="TEESOULZ"
+                  fill
+                  priority
+                  sizes="112px"
+                  className="object-contain"
+                />
+              </div>
             </Link>
 
             {/* Zone 3 (Right): Outlined Search Box + Vertical Divider + Utility Icons */}
@@ -424,18 +428,22 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Center: TEESOULZ CREATION Typography */}
+          {/* Center: Brand Logo */}
           <Link
             href="/"
-            className="flex flex-col items-center justify-center text-center py-0.5"
-            aria-label="TEESOULZ CREATION Home"
+            className="flex items-center justify-center py-0.5 focus:outline-hidden"
+            aria-label="TEESOULZ Home"
           >
-            <span className="text-lg font-black tracking-[0.2em] uppercase text-black leading-none">
-              TEESOULZ
-            </span>
-            <span className="text-[9px] font-black tracking-[0.35em] uppercase text-gray-500 leading-none mt-0.5">
-              CREATION
-            </span>
+            <div className="relative w-20 h-9">
+              <Image
+                src="/teesoulz-logo.png"
+                alt="TEESOULZ"
+                fill
+                priority
+                sizes="80px"
+                className="object-contain"
+              />
+            </div>
           </Link>
 
           {/* Right: Wishlist & Bag */}
