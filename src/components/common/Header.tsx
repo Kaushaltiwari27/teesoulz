@@ -516,24 +516,24 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Center: Brand Logo + TEESOULZ Text in (Logo  TEESOULZ) Format */}
+          {/* Center: Brand Logo + TEESOULZ Text Below in Center (Optimized for Mobile) */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
             <Link
               href="/"
-              className="flex items-center gap-1.5 sm:gap-2 py-0.5 focus:outline-hidden"
+              className="flex flex-col items-center justify-center py-0.5 focus:outline-hidden group"
               aria-label="TEESOULZ Home"
             >
-              <div className="relative w-8 h-6 sm:w-9 sm:h-7 flex-shrink-0">
+              <div className="relative w-14 h-6 sm:w-16 sm:h-7 flex-shrink-0 transition-transform duration-200 group-hover:scale-105">
                 <Image
                   src="/teesoulz-logo.png"
                   alt="TEESOULZ"
                   fill
                   priority
-                  sizes="36px"
+                  sizes="64px"
                   className="object-contain"
                 />
               </div>
-              <span className="font-black tracking-tight text-base sm:text-lg text-black leading-none uppercase font-sans">
+              <span className="text-[10px] sm:text-[11px] font-black tracking-[0.24em] text-black uppercase font-sans leading-none mt-1">
                 TEESOULZ
               </span>
             </Link>
