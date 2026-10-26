@@ -8,10 +8,12 @@ import {
   WishlistItem,
   ShippingAddress,
   Order,
+  OrderStatus,
   UserProfile,
   Coupon,
 } from '@/types';
 import { STORE_COUPONS, PRODUCTS } from '@/data/mockData';
+import { INITIAL_ORDERS } from '@/data/mockOrders';
 import { createClient } from '@/lib/supabase/client';
 
 export interface ToastMessage {
@@ -77,8 +79,17 @@ interface StoreContextType {
 
   // Orders
   orders: Order[];
+  allOrders: Order[];
   createOrder: (orderPayload: Omit<Order, 'id' | 'orderNumber' | 'date'>) => Promise<Order>;
   getOrderById: (orderNumber: string) => Order | undefined;
+  updateOrderStatus: (orderId: string, status: OrderStatus, trackingNumber?: string, carrier?: string) => Promise<void>;
+  deleteOrder: (orderId: string) => Promise<void>;
+
+  // Products Catalog (Admin & Live Store Sync)
+  products: Product[];
+  addProduct: (product: Omit<Product, 'id' | 'createdAt'> | Product) => Promise<Product>;
+  updateProduct: (product: Product) => Promise<void>;
+  deleteProduct: (productId: string) => Promise<void>;
 
   // Recently Viewed
   recentlyViewed: Product[];
@@ -121,6 +132,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [addresses, setAddresses] = useState<ShippingAddress[]>(DEFAULT_ADDRESSES);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>(INITIAL_ORDERS);
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -155,6 +168,30 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const storedOrders = localStorage.getItem('teesoulz_orders');
       if (storedOrders) setOrders(JSON.parse(storedOrders));
 
+      const storedAllOrders = localStorage.getItem('teesoulz_all_orders');
+      if (storedAllOrders) {
+        setAllOrders(JSON.parse(storedAllOrders));
+      } else {
+        fetch('/api/admin/orders')
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success && data.orders && data.orders.length > 0) setAllOrders(data.orders);
+          })
+          .catch(() => {});
+      }
+
+      const storedProducts = localStorage.getItem('teesoulz_products');
+      if (storedProducts) {
+        setProducts(JSON.parse(storedProducts));
+      } else {
+        fetch('/api/admin/products')
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success && data.products && data.products.length > 0) setProducts(data.products);
+          })
+          .catch(() => {});
+      }
+
       const storedCoupon = localStorage.getItem('teesoulz_coupon');
       if (storedCoupon) setAppliedCoupon(JSON.parse(storedCoupon));
 
@@ -165,6 +202,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsHydrated(true);
     }
+  }, []);
+
+  // Listen for cross-component products & orders updates
+  useEffect(() => {
+    const handleProductsUpdated = (e: Event) => {
+      const custom = e as CustomEvent<Product[]>;
+      if (custom.detail) setProducts(custom.detail);
+    };
+    window.addEventListener('teesoulz_products_updated', handleProductsUpdated);
+    return () => window.removeEventListener('teesoulz_products_updated', handleProductsUpdated);
   }, []);
 
   // Listen for Supabase Auth state changes
@@ -323,6 +370,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
+  }, []);
+
+  // Listen for cross-component products & orders updates
+  useEffect(() => {
+    const handleProductsUpdated = (e: Event) => {
+      const custom = e as CustomEvent<Product[]>;
+      if (custom.detail) setProducts(custom.detail);
+    };
+    window.addEventListener('teesoulz_products_updated', handleProductsUpdated);
+    return () => window.removeEventListener('teesoulz_products_updated', handleProductsUpdated);
   }, []);
 
   // Persist states
@@ -678,6 +735,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     };
 
     setOrders((prev) => [newOrder, ...prev]);
+    setAllOrders((prev) => {
+      const updated = [newOrder, ...prev.filter((o) => o.id !== newOrder.id && o.orderNumber !== newOrder.orderNumber)];
+      try {
+        localStorage.setItem('teesoulz_all_orders', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
 
     // Track checked-out items in recently viewed
     if (orderPayload.items && orderPayload.items.length > 0) {
@@ -792,10 +856,184 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const getOrderById = (orderNumber: string) => {
-    return orders.find(
-      (o) => o.orderNumber.toLowerCase() === orderNumber.toLowerCase() || o.id === orderNumber
+    return (
+      allOrders.find(
+        (o) => o.orderNumber.toLowerCase() === orderNumber.toLowerCase() || o.id === orderNumber
+      ) ||
+      orders.find(
+        (o) => o.orderNumber.toLowerCase() === orderNumber.toLowerCase() || o.id === orderNumber
+      )
     );
   };
+
+  // Orders Admin Operations
+  const updateOrderStatus = useCallback(
+    async (orderId: string, status: OrderStatus, trackingNumber?: string, carrier?: string): Promise<void> => {
+      setAllOrders((prev) => {
+        const updated = prev.map((o) => {
+          if (o.id === orderId || o.orderNumber === orderId) {
+            return {
+              ...o,
+              status,
+              ...(trackingNumber !== undefined ? { trackingNumber } : {}),
+              ...(carrier !== undefined ? { carrier } : {}),
+            };
+          }
+          return o;
+        });
+        try {
+          localStorage.setItem('teesoulz_all_orders', JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+
+      setOrders((prev) => {
+        const updated = prev.map((o) => {
+          if (o.id === orderId || o.orderNumber === orderId) {
+            return {
+              ...o,
+              status,
+              ...(trackingNumber !== undefined ? { trackingNumber } : {}),
+              ...(carrier !== undefined ? { carrier } : {}),
+            };
+          }
+          return o;
+        });
+        try {
+          localStorage.setItem('teesoulz_orders', JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+
+      try {
+        await fetch('/api/admin/orders', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId, status, trackingNumber, carrier }),
+        });
+      } catch {}
+
+      addToast('Order Status Updated', `Order #${orderId} marked as ${status}.`, 'success');
+    },
+    [addToast]
+  );
+
+  const deleteOrder = useCallback(
+    async (orderId: string): Promise<void> => {
+      setAllOrders((prev) => {
+        const updated = prev.filter((o) => o.id !== orderId && o.orderNumber !== orderId);
+        try {
+          localStorage.setItem('teesoulz_all_orders', JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+      setOrders((prev) => {
+        const updated = prev.filter((o) => o.id !== orderId && o.orderNumber !== orderId);
+        try {
+          localStorage.setItem('teesoulz_orders', JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+      addToast('Order Deleted', `Order #${orderId} removed.`, 'info');
+    },
+    [addToast]
+  );
+
+  // Products Admin Operations
+  const addProduct = useCallback(
+    async (productData: Omit<Product, 'id' | 'createdAt'> | Product): Promise<Product> => {
+      const slug =
+        productData.slug ||
+        productData.name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+
+      const newProd: Product = {
+        ...productData,
+        id: (productData as any).id || `ts-${Date.now()}`,
+        slug,
+        createdAt: (productData as any).createdAt || new Date().toISOString(),
+        rating: productData.rating || 5.0,
+        reviewCount: productData.reviewCount || 1,
+        totalStock:
+          (productData.variants || []).reduce((acc, v) => acc + (v.stock || 0), 0) ||
+          productData.totalStock ||
+          0,
+      };
+
+      setProducts((prev) => {
+        const updated = [newProd, ...prev.filter((p) => p.id !== newProd.id)];
+        try {
+          localStorage.setItem('teesoulz_products', JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent('teesoulz_products_updated', { detail: updated }));
+        } catch {}
+        return updated;
+      });
+
+      try {
+        await fetch('/api/admin/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newProd),
+        });
+      } catch {}
+
+      addToast('Product Added', `${newProd.name} successfully created.`, 'success');
+      return newProd;
+    },
+    [addToast]
+  );
+
+  const updateProduct = useCallback(
+    async (updatedProduct: Product): Promise<void> => {
+      const totalStock =
+        (updatedProduct.variants || []).reduce((acc, v) => acc + (v.stock || 0), 0) ||
+        updatedProduct.totalStock ||
+        0;
+      const finalProduct = { ...updatedProduct, totalStock };
+
+      setProducts((prev) => {
+        const updated = prev.map((p) => (p.id === finalProduct.id ? finalProduct : p));
+        try {
+          localStorage.setItem('teesoulz_products', JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent('teesoulz_products_updated', { detail: updated }));
+        } catch {}
+        return updated;
+      });
+
+      try {
+        await fetch('/api/admin/products', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(finalProduct),
+        });
+      } catch {}
+
+      addToast('Product Updated', `${finalProduct.name} saved.`, 'success');
+    },
+    [addToast]
+  );
+
+  const deleteProduct = useCallback(
+    async (productId: string): Promise<void> => {
+      setProducts((prev) => {
+        const updated = prev.filter((p) => p.id !== productId);
+        try {
+          localStorage.setItem('teesoulz_products', JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent('teesoulz_products_updated', { detail: updated }));
+        } catch {}
+        return updated;
+      });
+
+      try {
+        await fetch(`/api/admin/products?id=${productId}`, { method: 'DELETE' });
+      } catch {}
+
+      addToast('Product Deleted', 'Item removed from catalogue.', 'info');
+    },
+    [addToast]
+  );
 
   return (
     <StoreContext.Provider
@@ -840,8 +1078,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         updateAddress,
         deleteAddress,
         orders,
+        allOrders,
         createOrder,
         getOrderById,
+        updateOrderStatus,
+        deleteOrder,
+        products,
+        addProduct,
+        updateProduct,
+        deleteProduct,
         recentlyViewed,
         addRecentlyViewed,
         clearRecentlyViewed,

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCms } from '@/context/CmsContext';
 
 interface SlideItem {
   id: string;
@@ -66,24 +67,31 @@ const BONKERS_SLIDES: SlideItem[] = [
 const AUTOPLAY_INTERVAL = 5000; // Exact 5 seconds automatic slide rotation
 
 export default function HeroCampaign() {
+  const { cms } = useCms();
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const activeSlides = (cms.heroSlides && cms.heroSlides.length > 0)
+    ? cms.heroSlides.filter((s) => s.active)
+    : BONKERS_SLIDES;
+
+  const slides = activeSlides.length > 0 ? activeSlides : BONKERS_SLIDES;
 
   // Automatic slide rotation every 5 seconds without blocking on mouse hover
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % BONKERS_SLIDES.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, AUTOPLAY_INTERVAL);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % BONKERS_SLIDES.length);
-  }, []);
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  }, [slides.length]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + BONKERS_SLIDES.length) % BONKERS_SLIDES.length);
-  }, []);
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  }, [slides.length]);
 
   const goToSlide = (idx: number) => {
     setCurrentSlide(idx);
@@ -99,7 +107,7 @@ export default function HeroCampaign() {
           Mobile: Full screen story height (82vh)
       */}
       <div className="relative w-full h-[75vh] sm:h-[80vh] lg:h-[84vh] min-h-[460px] max-h-[820px]">
-        {BONKERS_SLIDES.map((slide, idx) => {
+        {slides.map((slide, idx) => {
           const isActive = idx === currentSlide;
           return (
             <div
@@ -208,7 +216,7 @@ export default function HeroCampaign() {
 
       {/* Bonkers Corner Style SVG Circular Pagination Dots with 5-Second Timer Progress */}
       <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center space-x-3">
-        {BONKERS_SLIDES.map((slide, idx) => {
+        {slides.map((slide, idx) => {
           const isActive = idx === currentSlide;
           return (
             <button

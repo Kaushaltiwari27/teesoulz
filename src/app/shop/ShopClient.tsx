@@ -8,6 +8,7 @@ import ProductGrid from '@/components/product/ProductGrid';
 import ProductFilters, { FilterOptions } from '@/components/product/ProductFilters';
 import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS } from '@/data/mockData';
+import { useStore } from '@/context/StoreContext';
 import { Product } from '@/types';
 
 export default function ShopClient() {
@@ -31,7 +32,14 @@ export default function ShopClient() {
     sortBy: initialSort,
   });
 
-  const [products, setProducts] = useState<Product[]>(PRODUCTS);
+  const { products: storeProducts } = useStore();
+  const [products, setProducts] = useState<Product[]>(storeProducts || PRODUCTS);
+
+  useEffect(() => {
+    if (storeProducts && storeProducts.length > 0) {
+      setProducts(storeProducts);
+    }
+  }, [storeProducts]);
 
   // Fetch live products from Supabase
   useEffect(() => {
@@ -98,7 +106,7 @@ export default function ShopClient() {
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.toLowerCase().includes(q))
+          (p.tags || []).some((t: string) => t.toLowerCase().includes(q))
       );
     }
 
@@ -115,7 +123,7 @@ export default function ShopClient() {
     // Size
     if (filters.size) {
       result = result.filter((p) =>
-        p.variants.some((v) => v.size === filters.size && v.stock > 0)
+        (p.variants || []).some((v: any) => v.size === filters.size && v.stock > 0)
       );
     }
 

@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from 'next';
 import { Archivo_Narrow } from 'next/font/google';
 import './globals.css';
 import { StoreProvider } from '@/context/StoreContext';
-import Header from '@/components/common/Header';
-import Footer from '@/components/common/Footer';
-import CartDrawer from '@/components/common/CartDrawer';
-import SearchModal from '@/components/common/SearchModal';
-import QuickViewModal from '@/components/common/QuickViewModal';
-import SizeGuideModal from '@/components/common/SizeGuideModal';
-import ToastContainer from '@/components/common/ToastContainer';
+import StoreLayoutShell from '@/components/layout/StoreLayoutShell';
+
+
+
+
+
+
 
 const archivoNarrow = Archivo_Narrow({
   subsets: ['latin'],
@@ -200,16 +200,16 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col font-sans bg-white text-[#111111] antialiased overflow-x-hidden w-full selection:bg-black selection:text-white">
         <StoreProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+
+          <StoreLayoutShell>{children}</StoreLayoutShell>
+
 
           {/* Interactive Global Drawers & Modals */}
-          <CartDrawer />
-          <SearchModal />
-          <QuickViewModal />
-          <SizeGuideModal />
-          <ToastContainer />
+
+
+
+
+
         </StoreProvider>
       </body>
     </html>

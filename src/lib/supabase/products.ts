@@ -170,20 +170,44 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       .single();
 
     if (error || !data) {
-      // Fallback to mockData
-      return PRODUCTS.find((p) => p.slug === slug) || null;
+      // Fallback to catalog source
+      return getCatalogSource().find((p) => p.slug === slug) || null;
     }
 
     return mapDatabaseProductToProduct(data);
   } catch (err: unknown) {
     console.warn('[Supabase Products] Single fetch exception:', err);
-    return PRODUCTS.find((p) => p.slug === slug) || null;
+    return getCatalogSource().find((p) => p.slug === slug) || null;
   }
 }
 
-// Fallback helper using mockData.ts
+// Fallback helper using mockData.ts and custom products
+function getCatalogSource(): Product[] {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem('teesoulz_products');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return PRODUCTS;
+  }
+  // Server-side
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'src', 'data', 'customProducts.json');
+    if (fs.existsSync(filePath)) {
+      const parsed = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+  return PRODUCTS;
+}
+
 function filterMockProducts(options: GetProductsOptions): Product[] {
-  let list = [...PRODUCTS];
+  let list = [...getCatalogSource()];
   if (options.category && options.category !== 'all') {
     list = list.filter((p) => p.category === options.category);
   }
