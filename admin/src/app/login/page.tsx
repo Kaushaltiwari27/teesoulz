@@ -33,6 +33,18 @@ export default function AdminLoginPage() {
       }
 
       if (data?.user) {
+        const userEmail = (data.user.email || '').toLowerCase().trim();
+
+        // STRICT SECURITY GUARD: Only authorized administrator email has access
+        const AUTHORIZED_ADMINS = ['kaushiiii27@gmail.com'];
+
+        if (!AUTHORIZED_ADMINS.includes(userEmail)) {
+          await supabase.auth.signOut();
+          setErrorMsg('ACCESS RESTRICTED: Customer storefront accounts are strictly forbidden from accessing TEESOULZ Core Admin.');
+          setIsLoading(false);
+          return;
+        }
+
         // Verify role in public.profiles
         const { data: profile, error: profileErr } = await supabase
           .from('profiles')
@@ -40,9 +52,9 @@ export default function AdminLoginPage() {
           .eq('id', data.user.id)
           .single();
 
-        if (profileErr || !profile || !['ADMIN', 'STAFF'].includes(profile.role)) {
+        if (profileErr || !profile || profile.role !== 'ADMIN') {
           await supabase.auth.signOut();
-          setErrorMsg('ACCESS RESTRICTED: Account does not have ADMIN or STAFF privileges.');
+          setErrorMsg('ACCESS RESTRICTED: Account does not have verified ADMIN privileges in the database.');
           setIsLoading(false);
           return;
         }

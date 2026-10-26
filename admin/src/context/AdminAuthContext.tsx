@@ -24,6 +24,16 @@ interface AdminAuthContextType {
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
+// STRICT MASTER WHITELIST: Only the master administrator email can access
+export const AUTHORIZED_SUPERADMINS = ['kaushiiii27@gmail.com'];
+
+export function isAuthorizedAdmin(email?: string, role?: string): boolean {
+  if (!email) return false;
+  const isEmailAllowed = AUTHORIZED_SUPERADMINS.includes(email.toLowerCase().trim());
+  const isRoleAdmin = role === 'ADMIN';
+  return isEmailAllowed && isRoleAdmin;
+}
+
 export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -31,7 +41,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<AdminProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchProfile = useCallback(async (userId: string, email?: string) => {
+  const fetchProfile = useCallback(async (userId: string): Promise<AdminProfile | null> => {
     try {
       const supabase = createClient();
       const { data, error } = await supabase
@@ -41,80 +51,70 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         .single();
 
       if (error || !data) {
-        console.warn('[AdminAuth] Profile query warning:', error?.message);
-        // Fallback profile if user exists in auth
-        return {
-          id: userId,
-          name: email ? email.split('@')[0] : 'Administrator',
-          email: email || '',
-          role: 'ADMIN' as UserRole,
-        };
+        return null;
       }
 
       return data as AdminProfile;
-    } catch (e) {
-      console.error('[AdminAuth] Exception loading profile:', e);
+    } catch {
       return null;
     }
   }, []);
 
+  const verifyAndSetSession = useCallback(async (sessionUser: any | null) => {
+    if (!sessionUser) {
+      setUser(null);
+      setProfile(null);
+      if (pathname !== '/login') {
+        router.replace('/login');
+      }
+      setIsLoading(false);
+      return;
+    }
+
+    const p = await fetchProfile(sessionUser.id);
+
+    // Enforce strict single-admin security check
+    if (!isAuthorizedAdmin(sessionUser.email, p?.role)) {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      setUser(null);
+      setProfile(null);
+      if (pathname !== '/login') {
+        router.replace('/login?error=restricted');
+      }
+      setIsLoading(false);
+      return;
+    }
+
+    // Authorized
+    setUser(sessionUser);
+    setProfile(p);
+    setIsLoading(false);
+  }, [fetchProfile, pathname, router]);
+
   const refreshProfile = useCallback(async () => {
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      setUser(session.user);
-      const p = await fetchProfile(session.user.id, session.user.email);
-      setProfile(p);
-    } else {
-      setUser(null);
-      setProfile(null);
-    }
-  }, [fetchProfile]);
+    await verifyAndSetSession(session?.user || null);
+  }, [verifyAndSetSession]);
 
   useEffect(() => {
     const supabase = createClient();
 
-    // Initial session load
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (session?.user) {
-        setUser(session.user);
-        const p = await fetchProfile(session.user.id, session.user.email);
-        setProfile(p);
-
-        // Security check: if not admin/staff and on protected page
-        if (p && !['ADMIN', 'STAFF'].includes(p.role) && pathname !== '/login') {
-          router.replace('/login?error=unauthorized');
-        }
-      } else {
-        setUser(null);
-        setProfile(null);
-        if (pathname !== '/login') {
-          router.replace('/login');
-        }
-      }
-      setIsLoading(false);
+    // Initial session check
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      verifyAndSetSession(session?.user || null);
     });
 
-    // Listen for auth state change
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        setUser(session.user);
-        const p = await fetchProfile(session.user.id, session.user.email);
-        setProfile(p);
-      } else {
-        setUser(null);
-        setProfile(null);
-        if (pathname !== '/login') {
-          router.replace('/login');
-        }
-      }
-      setIsLoading(false);
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      verifyAndSetSession(session?.user || null);
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [fetchProfile, pathname, router]);
+  }, [verifyAndSetSession]);
 
   const signOut = async () => {
     const supabase = createClient();
@@ -124,7 +124,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     router.replace('/login');
   };
 
-  const isAdmin = profile?.role === 'ADMIN' || profile?.role === 'STAFF';
+  const isAdmin = isAuthorizedAdmin(user?.email, profile?.role);
 
   return (
     <AdminAuthContext.Provider
@@ -144,7 +144,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAdminAuth() {
   const context = useContext(AdminAuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAdminAuth must be used within an AdminAuthProvider');
   }
   return context;
