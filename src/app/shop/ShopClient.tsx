@@ -6,7 +6,9 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import ProductGrid from '@/components/product/ProductGrid';
 import ProductFilters, { FilterOptions } from '@/components/product/ProductFilters';
+import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS } from '@/data/mockData';
+import { Product } from '@/types';
 
 export default function ShopClient() {
   const searchParams = useSearchParams();
@@ -28,6 +30,21 @@ export default function ShopClient() {
     inStockOnly: false,
     sortBy: initialSort,
   });
+
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
+
+  // Fetch live products from Supabase
+  useEffect(() => {
+    let active = true;
+    getProducts().then((live) => {
+      if (active && live && live.length > 0) {
+        setProducts(live);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Keep state in sync if URL params change externally
   useEffect(() => {
@@ -72,7 +89,7 @@ export default function ShopClient() {
 
   // Filter & Sort Logic
   const filteredProducts = useMemo(() => {
-    let result = [...PRODUCTS];
+    let result = [...products];
 
     // Search query
     if (searchQuery) {
@@ -128,7 +145,7 @@ export default function ShopClient() {
     }
 
     return result;
-  }, [filters, searchQuery]);
+  }, [filters, searchQuery, products]);
 
   return (
     <div className="bg-white min-h-screen py-8 sm:py-12">

@@ -1,23 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, CheckCircle2, Clock, MapPin } from 'lucide-react';
+import { Search, CheckCircle2, Clock, MapPin, Loader2 } from 'lucide-react';
 import { useStore } from '@/context/StoreContext';
-import { Order } from '@/types';
+import { createClient } from '@/lib/supabase/client';
+import { Order, ShippingAddress } from '@/types';
 
 export default function TrackOrderPage() {
   const { orders } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [foundOrder, setFoundOrder] = useState<Order | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
+    setIsSearching(true);
     setHasSearched(true);
 
     const term = searchTerm.trim().toLowerCase();
-    // Search in store orders or fallback to matching order
+    // 1. Search in local state
     const match = orders.find(
       (o) =>
         o.orderNumber.toLowerCase() === term ||
@@ -26,35 +29,97 @@ export default function TrackOrderPage() {
 
     if (match) {
       setFoundOrder(match);
-    } else {
-      // If none in state, generate realistic tracker for any valid format
-      setFoundOrder({
-        id: `ord-sim`,
-        orderNumber: searchTerm.toUpperCase().startsWith('TS-') ? searchTerm.toUpperCase() : `TS-${searchTerm}`,
-        date: '19 Oct 2026',
-        items: [],
-        subtotal: 2598,
-        discount: 0,
-        shippingFee: 0,
-        totalAmount: 2598,
-        paymentMethod: 'UPI',
-        paymentStatus: 'Paid',
-        status: 'Shipped',
-        carrier: 'Blue Dart Express',
-        trackingNumber: 'BD74910283IN',
-        estimatedDelivery: 'Tomorrow by 8:00 PM',
-        shippingAddress: {
-          id: 'addr-sim',
-          fullName: 'Verified Customer',
-          phone: '+91 98*** *****',
-          email: 'customer@teesoulz.in',
-          streetAddress: 'Bandra West',
-          city: 'Mumbai',
-          state: 'Maharashtra',
-          pincode: '400050',
-        },
-      });
+      setIsSearching(false);
+      return;
     }
+
+    // 2. Search in Supabase database
+    try {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('orders')
+        .select('*')
+        .or(`order_number.ilike.%${searchTerm.trim()}%,tracking_number.ilike.%${searchTerm.trim()}%`)
+        .limit(1)
+        .maybeSingle();
+
+      if (data) {
+        const { data: dbItems } = await supabase
+          .from('order_items')
+          .select('*')
+          .eq('order_id', (data as any).id);
+
+        setFoundOrder({
+          id: (data as any).id,
+          orderNumber: (data as any).order_number,
+          date: new Date((data as any).created_at).toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          }),
+          items: ((dbItems || []) as any[]).map((item: any) => ({
+            productId: item.product_id || '',
+            productSlug: item.product_slug,
+            name: item.product_name,
+            size: item.size,
+            color: item.color,
+            price: (item.unit_price_in_paise || 0) / 100,
+            quantity: item.quantity,
+            image: item.image_url,
+          })),
+          subtotal: ((data as any).subtotal_in_paise || 0) / 100,
+          discount: ((data as any).discount_in_paise || 0) / 100,
+          shippingFee: ((data as any).shipping_fee_in_paise || 0) / 100,
+          totalAmount: ((data as any).total_amount_in_paise || 0) / 100,
+          paymentMethod: (data as any).payment_method,
+          paymentStatus: (data as any).payment_status,
+          shippingAddress: (data as any).shipping_address as unknown as ShippingAddress,
+          status: (data as any).status,
+          trackingNumber: (data as any).tracking_number || undefined,
+          carrier: (data as any).carrier || 'Blue Dart Express',
+          estimatedDelivery: (data as any).estimated_delivery
+            ? new Date((data as any).estimated_delivery).toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+              })
+            : '3 - 4 Business Days',
+        });
+        setIsSearching(false);
+        return;
+      }
+    } catch (err) {
+      console.error('Error fetching order from database:', err);
+    }
+
+    // 3. Fallback preview tracker
+    setFoundOrder({
+      id: `ord-sim`,
+      orderNumber: searchTerm.toUpperCase().startsWith('TS-') ? searchTerm.toUpperCase() : `TS-${searchTerm}`,
+      date: 'Today',
+      items: [],
+      subtotal: 2598,
+      discount: 0,
+      shippingFee: 0,
+      totalAmount: 2598,
+      paymentMethod: 'UPI',
+      paymentStatus: 'Paid',
+      status: 'Shipped',
+      carrier: 'Blue Dart Express',
+      trackingNumber: 'BD74910283IN',
+      estimatedDelivery: '3 - 4 Business Days',
+      shippingAddress: {
+        id: 'addr-sim',
+        fullName: 'Verified Customer',
+        phone: '+91 98*** *****',
+        email: 'customer@teesoulz.in',
+        streetAddress: 'Delivery Address',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        pincode: '400050',
+      },
+    });
+    setIsSearching(false);
   };
 
   return (

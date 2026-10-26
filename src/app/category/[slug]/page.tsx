@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
+import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS, CATEGORIES_DATA } from '@/data/mockData';
 import ProductGrid from '@/components/product/ProductGrid';
 import { Metadata } from 'next';
@@ -16,6 +17,8 @@ export async function generateStaticParams() {
   ];
   return slugs;
 }
+
+export const instant = false;
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -47,9 +50,11 @@ export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
 
   const categoryMeta = CATEGORIES_DATA.find((c) => c.slug === slug);
+  const liveProducts = await getProducts();
+  const allProducts = liveProducts && liveProducts.length > 0 ? liveProducts : PRODUCTS;
 
   // Match products by category or gender
-  const products = PRODUCTS.filter((p) => {
+  const products = allProducts.filter((p) => {
     if (slug === 'men' || slug === 'women' || slug === 'unisex') {
       return p.gender === slug || p.gender === 'unisex';
     }

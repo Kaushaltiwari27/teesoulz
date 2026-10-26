@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ChevronRight, Tag } from 'lucide-react';
+import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS } from '@/data/mockData';
 import ProductGrid from '@/components/product/ProductGrid';
 
@@ -9,8 +10,12 @@ export const metadata = {
   description: 'Limited-time special prices on premium heavyweight Indian streetwear.',
 };
 
-export default function SalePage() {
-  const saleProducts = PRODUCTS.filter((p) => (p.discountPercent || 0) > 0);
+export const instant = false;
+
+export default async function SalePage() {
+  const liveProducts = await getProducts();
+  const allProducts = liveProducts && liveProducts.length > 0 ? liveProducts : PRODUCTS;
+  const saleProducts = allProducts.filter((p) => (p.discountPercent || 0) > 0);
 
   return (
     <div className="bg-white min-h-screen py-8 sm:py-12">

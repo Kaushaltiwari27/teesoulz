@@ -7,7 +7,10 @@ import EditorialCultureSection from '@/components/home/EditorialCultureSection';
 import CustomerReviewsSection from '@/components/home/CustomerReviewsSection';
 import TrustPerksSection from '@/components/home/TrustPerksSection';
 import RecentlyViewedSection from '@/components/home/RecentlyViewedSection';
+import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS } from '@/data/mockData';
+
+export const instant = false;
 
 const MID_PAGE_SLIDES: CampaignSlide[] = [
   {
@@ -57,28 +60,31 @@ const MID_PAGE_SLIDES: CampaignSlide[] = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const liveProducts = await getProducts();
+  const products = liveProducts && liveProducts.length > 0 ? liveProducts : PRODUCTS;
+
   // 1. Curated New Arrivals (8 items)
-  const newArrivals = PRODUCTS.filter(
+  const newArrivals = products.filter(
     (p) => p.isNewArrival || p.tags?.includes('New Drop') || p.tags?.includes('New In')
   );
   const displayNewArrivals =
-    newArrivals.length >= 4 ? newArrivals.slice(0, 8) : PRODUCTS.slice(0, 8);
+    newArrivals.length >= 4 ? newArrivals.slice(0, 8) : products.slice(0, 8);
 
   // 2. Curated Bestsellers (8 items)
-  const bestsellers = PRODUCTS.filter((p) => p.isBestseller);
+  const bestsellers = products.filter((p) => p.isBestseller);
   const displayBestsellers =
-    bestsellers.length >= 4 ? bestsellers.slice(0, 8) : PRODUCTS.slice(4, 12);
+    bestsellers.length >= 4 ? bestsellers.slice(0, 8) : products.slice(4, 12);
 
   // 3. Shop Women (8 items)
-  const womens = PRODUCTS.filter((p) => p.gender === 'women' || p.gender === 'unisex');
+  const womens = products.filter((p) => p.gender === 'women' || p.gender === 'unisex');
   const displayWomens =
-    womens.length >= 4 ? womens.slice(0, 8) : PRODUCTS.slice(0, 8);
+    womens.length >= 4 ? womens.slice(0, 8) : products.slice(0, 8);
 
   // 4. Shop Men (8 items)
-  const mens = PRODUCTS.filter((p) => p.gender === 'men' || p.gender === 'unisex');
+  const mens = products.filter((p) => p.gender === 'men' || p.gender === 'unisex');
   const displayMens =
-    mens.length >= 4 ? mens.slice(0, 8) : PRODUCTS.slice(0, 8);
+    mens.length >= 4 ? mens.slice(0, 8) : products.slice(0, 8);
 
   return (
     <div className="w-full bg-white">

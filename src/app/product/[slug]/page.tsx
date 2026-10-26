@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+import { getProductBySlug, getProducts } from '@/lib/supabase/products';
 import { PRODUCTS } from '@/data/mockData';
 import ProductDetailClient from './ProductDetailClient';
 import { Metadata } from 'next';
@@ -8,13 +9,15 @@ export async function generateStaticParams() {
   return PRODUCTS.map((p) => ({ slug: p.slug }));
 }
 
+export const instant = false;
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = PRODUCTS.find((p) => p.slug === slug);
+  const product = (await getProductBySlug(slug)) || PRODUCTS.find((p) => p.slug === slug);
 
   if (!product) {
     return {
@@ -55,16 +58,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const product = PRODUCTS.find((p) => p.slug === slug);
+  const product = (await getProductBySlug(slug)) || PRODUCTS.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();
   }
 
   // Find related products in the same category
-  const relatedProducts = PRODUCTS.filter(
-    (p) => p.category === product.category && p.id !== product.id
-  ).slice(0, 4);
+  const allProducts = await getProducts();
+  const relatedProducts = allProducts
+    .filter((p) => p.category === product.category && p.slug !== product.slug)
+    .slice(0, 4);
 
   // Schema.org Product & Breadcrumb JSON-LD
   const productJsonLd = {

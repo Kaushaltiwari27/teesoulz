@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ChevronRight, Sparkles } from 'lucide-react';
+import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS, COLLECTIONS_DATA } from '@/data/mockData';
 import ProductGrid from '@/components/product/ProductGrid';
 import { Metadata } from 'next';
@@ -10,6 +11,8 @@ import { Metadata } from 'next';
 export async function generateStaticParams() {
   return COLLECTIONS_DATA.map((c) => ({ slug: c.slug }));
 }
+
+export const instant = false;
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -41,7 +44,9 @@ export default async function CollectionPage({ params }: Props) {
   const { slug } = await params;
 
   const collection = COLLECTIONS_DATA.find((c) => c.slug === slug);
-  const products = PRODUCTS.filter((p) => p.collections.includes(slug));
+  const liveProducts = await getProducts();
+  const allProducts = liveProducts && liveProducts.length > 0 ? liveProducts : PRODUCTS;
+  const products = allProducts.filter((p) => p.collections.includes(slug));
 
   const displayName = collection ? collection.name : slug.replace('-', ' ').toUpperCase();
 

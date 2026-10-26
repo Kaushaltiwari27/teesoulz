@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ChevronRight, Flame } from 'lucide-react';
+import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS } from '@/data/mockData';
 import ProductGrid from '@/components/product/ProductGrid';
 
@@ -9,8 +10,13 @@ export const metadata = {
   description: 'Our most demanded heavyweight silhouettes, 260 GSM boxy tees, and structural hoodies.',
 };
 
-export default function BestsellersPage() {
-  const bestsellers = PRODUCTS.filter((p) => p.isBestseller);
+export const instant = false;
+
+export default async function BestsellersPage() {
+  const liveBestsellers = await getProducts({ isBestseller: true });
+  const bestsellers = liveBestsellers && liveBestsellers.length > 0 
+    ? liveBestsellers 
+    : PRODUCTS.filter((p) => p.isBestseller);
 
   return (
     <div className="bg-white min-h-screen py-8 sm:py-12">

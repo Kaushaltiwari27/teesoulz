@@ -129,7 +129,7 @@ export default function CheckoutPage() {
       // Simulate network request
       await new Promise((resolve) => setTimeout(resolve, 1200));
 
-      const newOrder = createOrder({
+      const newOrder = await createOrder({
         items: orderItems,
         subtotal: cartSubtotal,
         discount: cartDiscount,

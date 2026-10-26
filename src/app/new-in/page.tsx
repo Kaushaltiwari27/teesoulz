@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ChevronRight, Sparkles } from 'lucide-react';
+import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS } from '@/data/mockData';
 import ProductGrid from '@/components/product/ProductGrid';
 
@@ -9,8 +10,13 @@ export const metadata = {
   description: 'Explore the newest heavyweight drop-shoulder oversized tees, hoodies, and streetwear essentials.',
 };
 
-export default function NewInPage() {
-  const newProducts = PRODUCTS.filter((p) => p.isNewArrival || p.tags.includes('New In'));
+export const instant = false;
+
+export default async function NewInPage() {
+  const liveNew = await getProducts({ isNewArrival: true });
+  const newProducts = liveNew && liveNew.length > 0 
+    ? liveNew 
+    : PRODUCTS.filter((p) => p.isNewArrival || p.tags.includes('New In'));
 
   return (
     <div className="bg-white min-h-screen py-8 sm:py-12">

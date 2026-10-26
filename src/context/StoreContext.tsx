@@ -12,6 +12,7 @@ import {
   Coupon,
 } from '@/types';
 import { STORE_COUPONS, PRODUCTS } from '@/data/mockData';
+import { createClient } from '@/lib/supabase/client';
 
 export interface ToastMessage {
   id: string;
@@ -63,10 +64,10 @@ interface StoreContextType {
   // Auth & Profile
   user: UserProfile | null;
   isAuthenticated: boolean;
-  login: (email: string) => boolean;
-  register: (name: string, email: string, phone: string) => boolean;
-  logout: () => void;
-  updateProfile: (profile: Partial<UserProfile>) => void;
+  login: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, phone: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  updateProfile: (profile: Partial<UserProfile>) => Promise<void>;
 
   // Addresses
   addresses: ShippingAddress[];
@@ -76,7 +77,7 @@ interface StoreContextType {
 
   // Orders
   orders: Order[];
-  createOrder: (orderPayload: Omit<Order, 'id' | 'orderNumber' | 'date'>) => Order;
+  createOrder: (orderPayload: Omit<Order, 'id' | 'orderNumber' | 'date'>) => Promise<Order>;
   getOrderById: (orderNumber: string) => Order | undefined;
 
   // Recently Viewed
@@ -164,6 +165,164 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsHydrated(true);
     }
+  }, []);
+
+  // Listen for Supabase Auth state changes
+  useEffect(() => {
+    const supabase = createClient();
+
+    const syncUserOrdersAndAddresses = async (userId: string) => {
+      try {
+        const { data: dbOrders } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false });
+
+        if (dbOrders && dbOrders.length > 0) {
+          const orderIds = dbOrders.map((o) => o.id);
+          const { data: dbItems } = await supabase
+            .from('order_items')
+            .select('*')
+            .in('order_id', orderIds);
+
+          const itemsByOrderId: { [orderId: string]: any[] } = {};
+          (dbItems || []).forEach((item: any) => {
+            if (!itemsByOrderId[item.order_id]) itemsByOrderId[item.order_id] = [];
+            itemsByOrderId[item.order_id].push(item);
+          });
+
+          const mappedOrders: Order[] = dbOrders.map((o: any) => ({
+            id: o.id,
+            orderNumber: o.order_number,
+            date: new Date(o.created_at).toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            }),
+            items: (itemsByOrderId[o.id] || []).map((item: any) => ({
+              productId: item.product_id || '',
+              productSlug: item.product_slug,
+              name: item.product_name,
+              size: item.size,
+              color: item.color,
+              price: (item.unit_price_in_paise || 0) / 100,
+              quantity: item.quantity,
+              image: item.image_url,
+            })),
+            subtotal: (o.subtotal_in_paise || 0) / 100,
+            discount: (o.discount_in_paise || 0) / 100,
+            shippingFee: (o.shipping_fee_in_paise || 0) / 100,
+            totalAmount: (o.total_amount_in_paise || 0) / 100,
+            paymentMethod: o.payment_method,
+            paymentStatus: o.payment_status,
+            shippingAddress: o.shipping_address as unknown as ShippingAddress,
+            status: o.status,
+            trackingNumber: o.tracking_number || undefined,
+            carrier: o.carrier || undefined,
+            estimatedDelivery: o.estimated_delivery
+              ? new Date(o.estimated_delivery).toLocaleDateString('en-IN', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                })
+              : '3 - 4 Business Days',
+          }));
+          setOrders(mappedOrders);
+        }
+
+        const { data: dbAddresses } = await supabase
+          .from('addresses')
+          .select('*')
+          .eq('user_id', userId)
+          .order('is_default', { ascending: false });
+
+        if (dbAddresses && dbAddresses.length > 0) {
+          const mappedAddresses: ShippingAddress[] = dbAddresses.map((a: any) => ({
+            id: a.id,
+            fullName: a.full_name,
+            phone: a.phone,
+            email: a.email,
+            streetAddress: a.street_address,
+            apartment: a.apartment || undefined,
+            city: a.city,
+            state: a.state,
+            pincode: a.pincode,
+            isDefault: a.is_default,
+          }));
+          setAddresses(mappedAddresses);
+        }
+      } catch (err) {
+        console.error('Error syncing user orders/addresses:', err);
+      }
+    };
+
+    // Check initial active session
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile) {
+          setUser({
+            id: profile.id,
+            name: profile.name,
+            email: profile.email,
+            phone: profile.phone || '',
+            avatarUrl: profile.avatar_url || undefined,
+            joinedDate: new Date(profile.created_at).toLocaleDateString('en-IN', {
+              month: 'long',
+              year: 'numeric',
+            }),
+          });
+        }
+        await syncUserOrdersAndAddresses(session.user.id);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile) {
+          setUser({
+            id: profile.id,
+            name: profile.name,
+            email: profile.email,
+            phone: profile.phone || '',
+            avatarUrl: profile.avatar_url || undefined,
+            joinedDate: new Date(profile.created_at).toLocaleDateString('en-IN', {
+              month: 'long',
+              year: 'numeric',
+            }),
+          });
+        } else {
+          setUser({
+            id: session.user.id,
+            name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'Member',
+            email: session.user.email || '',
+            phone: session.user.user_metadata?.phone || '',
+            joinedDate: 'October 2026',
+          });
+        }
+        await syncUserOrdersAndAddresses(session.user.id);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setOrders([]);
+        setAddresses(DEFAULT_ADDRESSES);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Persist states
@@ -370,39 +529,105 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const closeSearch = () => setIsSearchOpen(false);
 
   // Auth
-  const login = (email: string) => {
-    const newUser: UserProfile = {
-      id: 'usr-001',
-      name: 'Yash Sharma',
-      email: email.trim().toLowerCase(),
-      phone: '+91 98765 43210',
-      joinedDate: 'October 2026',
-    };
-    setUser(newUser);
-    addToast('Welcome Back', `Logged in as ${newUser.name}`, 'success');
-    return true;
+  const login = async (email: string, password?: string) => {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password: password || 'Teesoulz@123',
+      });
+
+      if (error) {
+        addToast('Sign In Failed', error.message, 'error');
+        return { success: false, error: error.message };
+      }
+
+      if (data.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
+
+        const profileName = profile?.name || data.user.user_metadata?.name || 'Member';
+        addToast('Welcome Back', `Signed in as ${profileName}`, 'success');
+      }
+
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Login failed';
+      addToast('Error', msg, 'error');
+      return { success: false, error: msg };
+    }
   };
 
-  const register = (name: string, email: string, phone: string) => {
-    const newUser: UserProfile = {
-      id: `usr-${Date.now()}`,
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      phone: phone.trim(),
-      joinedDate: 'October 2026',
-    };
-    setUser(newUser);
-    addToast('Account Created', `Welcome to TEESOULZ, ${newUser.name}`, 'success');
-    return true;
+  const register = async (name: string, email: string, phone: string, password?: string) => {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim().toLowerCase(),
+        password: password || 'Teesoulz@123',
+        options: {
+          data: {
+            name: name.trim(),
+            phone: phone.trim(),
+          },
+        },
+      });
+
+      if (error) {
+        addToast('Sign Up Failed', error.message, 'error');
+        return { success: false, error: error.message };
+      }
+
+      if (data.user) {
+        try {
+          await supabase.from('profiles').upsert({
+            id: data.user.id,
+            name: name.trim(),
+            email: email.trim().toLowerCase(),
+            phone: phone.trim() || null,
+            role: 'CUSTOMER',
+          });
+        } catch {}
+      }
+
+      if (data.session) {
+        addToast('Welcome to TEESOULZ', `Account created for ${name.trim()}!`, 'success');
+      } else {
+        addToast('Account Created', 'Please check your email to verify your account, or sign in.', 'info');
+      }
+
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Registration failed';
+      addToast('Error', msg, 'error');
+      return { success: false, error: msg };
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } catch {}
     setUser(null);
     addToast('Logged Out', 'You have been safely signed out.', 'info');
   };
 
-  const updateProfile = (profile: Partial<UserProfile>) => {
+  const updateProfile = async (profile: Partial<UserProfile>) => {
     if (!user) return;
+    try {
+      const supabase = createClient();
+      await supabase
+        .from('profiles')
+        .update({
+          name: profile.name,
+          phone: profile.phone,
+          avatar_url: profile.avatarUrl,
+        })
+        .eq('id', user.id);
+    } catch {}
     const updated = { ...user, ...profile };
     setUser(updated);
     addToast('Profile Updated', 'Your profile details have been saved.', 'success');
@@ -437,15 +662,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Orders
-  const createOrder = (orderPayload: Omit<Order, 'id' | 'orderNumber' | 'date'>) => {
+  const createOrder = async (orderPayload: Omit<Order, 'id' | 'orderNumber' | 'date'>): Promise<Order> => {
     const orderNumber = `TS-${Math.floor(100000 + Math.random() * 900000)}`;
+    const trackingNumber = `BD${Math.floor(20000000 + Math.random() * 80000000)}IN`;
+    const carrier = 'Blue Dart Express';
+
     const newOrder: Order = {
       ...orderPayload,
       id: `ord-${Date.now()}`,
       orderNumber,
       date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-      trackingNumber: `BD${Math.floor(20000000 + Math.random() * 80000000)}IN`,
-      carrier: 'Blue Dart Express',
+      trackingNumber,
+      carrier,
       estimatedDelivery: '3 - 4 Business Days',
     };
 
@@ -466,6 +694,84 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.removeItem('teesoulz_coupon');
     } catch {}
+
+    // Live Database Sync to Supabase orders & order_items
+    try {
+      const supabase = createClient();
+      const isValidUuid = (val?: string) =>
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val || '');
+
+      const userId = user?.id && isValidUuid(user.id) ? user.id : null;
+
+      // 1. Insert into public.orders
+      const { data: dbOrder, error: orderErr } = await supabase
+        .from('orders')
+        .insert({
+          order_number: orderNumber,
+          user_id: userId,
+          subtotal_in_paise: Math.round(orderPayload.subtotal * 100),
+          discount_in_paise: Math.round(orderPayload.discount * 100),
+          shipping_fee_in_paise: Math.round(orderPayload.shippingFee * 100),
+          total_amount_in_paise: Math.round(orderPayload.totalAmount * 100),
+          payment_method: orderPayload.paymentMethod,
+          payment_status: orderPayload.paymentStatus,
+          status: 'Confirmed',
+          shipping_address: orderPayload.shippingAddress as unknown as any,
+          tracking_number: trackingNumber,
+          carrier: carrier,
+          estimated_delivery: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
+        })
+        .select()
+        .single();
+
+      if (orderErr) {
+        console.error('Failed to sync order to Supabase:', orderErr);
+      } else if (dbOrder) {
+        newOrder.id = dbOrder.id;
+
+        // 2. Insert line items into public.order_items
+        const orderItemsToInsert = orderPayload.items.map((item) => ({
+          order_id: dbOrder.id,
+          product_id: isValidUuid(item.productId) ? item.productId : null,
+          product_name: item.name,
+          product_slug: item.productSlug,
+          size: item.size,
+          color: item.color,
+          image_url: item.image,
+          unit_price_in_paise: Math.round(item.price * 100),
+          quantity: item.quantity,
+          total_price_in_paise: Math.round(item.price * item.quantity * 100),
+        }));
+
+        const { error: itemsErr } = await supabase
+          .from('order_items')
+          .insert(orderItemsToInsert);
+
+        if (itemsErr) {
+          console.error('Failed to sync order items to Supabase:', itemsErr);
+        }
+
+        // 3. If customer is registered, save address into public.addresses
+        if (userId) {
+          try {
+            await supabase.from('addresses').insert({
+              user_id: userId,
+              full_name: orderPayload.shippingAddress.fullName,
+              phone: orderPayload.shippingAddress.phone,
+              email: orderPayload.shippingAddress.email,
+              street_address: orderPayload.shippingAddress.streetAddress,
+              apartment: orderPayload.shippingAddress.apartment || null,
+              city: orderPayload.shippingAddress.city,
+              state: orderPayload.shippingAddress.state,
+              pincode: orderPayload.shippingAddress.pincode,
+              is_default: addresses.length === 0,
+            });
+          } catch {}
+        }
+      }
+    } catch (syncErr) {
+      console.error('Error syncing order to Supabase:', syncErr);
+    }
 
     return newOrder;
   };

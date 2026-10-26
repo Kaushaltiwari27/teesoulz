@@ -1,14 +1,73 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CheckCircle2, Truck, MapPin } from 'lucide-react';
 import { useStore } from '@/context/StoreContext';
+import { createClient } from '@/lib/supabase/client';
+import { Order, ShippingAddress } from '@/types';
 
 export default function OrderConfirmationClient({ orderId }: { orderId: string }) {
   const { getOrderById } = useStore();
-  const order = getOrderById(orderId);
+  const [order, setOrder] = useState<Order | undefined>(() => getOrderById(orderId));
+
+  useEffect(() => {
+    if (!order) {
+      const local = getOrderById(orderId);
+      if (local) {
+        setOrder(local);
+        return;
+      }
+
+      // Query Supabase live database for the order
+      const supabase = createClient();
+      supabase
+        .from('orders')
+        .select('*')
+        .eq('order_number', orderId)
+        .maybeSingle()
+        .then(async ({ data }: { data: any }) => {
+          if (data) {
+            const { data: dbItems } = await supabase
+              .from('order_items')
+              .select('*')
+              .eq('order_id', data.id);
+
+            setOrder({
+              id: data.id,
+              orderNumber: data.order_number,
+              date: new Date(data.created_at).toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+              }),
+              items: ((dbItems || []) as any[]).map((item: any) => ({
+                productId: item.product_id || '',
+                productSlug: item.product_slug,
+                name: item.product_name,
+                size: item.size,
+                color: item.color,
+                price: (item.unit_price_in_paise || 0) / 100,
+                quantity: item.quantity,
+                image: item.image_url,
+              })),
+              subtotal: (data.subtotal_in_paise || 0) / 100,
+              discount: (data.discount_in_paise || 0) / 100,
+              shippingFee: (data.shipping_fee_in_paise || 0) / 100,
+              totalAmount: (data.total_amount_in_paise || 0) / 100,
+              paymentMethod: data.payment_method,
+              paymentStatus: data.payment_status,
+              shippingAddress: data.shipping_address as unknown as ShippingAddress,
+              status: data.status,
+              trackingNumber: data.tracking_number || undefined,
+              carrier: data.carrier || undefined,
+              estimatedDelivery: '3 - 4 Business Days',
+            });
+          }
+        });
+    }
+  }, [orderId, order, getOrderById]);
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen py-12 sm:py-20">

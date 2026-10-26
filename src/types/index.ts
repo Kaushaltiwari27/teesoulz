@@ -123,7 +123,7 @@ export interface Order {
   shippingFee: number;
   totalAmount: number;
   paymentMethod: 'UPI' | 'Card' | 'NetBanking' | 'COD';
-  paymentStatus: 'Paid' | 'Pending' | 'Failed';
+  paymentStatus: 'Paid' | 'Pending' | 'Failed' | 'Refunded';
   shippingAddress: ShippingAddress;
   status: OrderStatus;
   trackingNumber?: string;
