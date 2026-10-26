@@ -1,2 +1,3 @@
-# Exclude admin panel directory when deploying root storefront on Vercel
-admin/
+# Ignore admin panel directory and all subfiles when deploying root storefront
+admin
+admin/**
