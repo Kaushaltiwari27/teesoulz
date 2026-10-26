@@ -2,22 +2,20 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { Database } from '@/types/database.types';
 
+const FALLBACK_SUPABASE_URL = 'https://rcxvyfgeduyokdahkrow.supabase.co';
+const FALLBACK_SUPABASE_ANON_KEY = 'sb_publishable_V5k0p-NiVUOmWMvW5TptAw_WddPESHK';
+
 export async function createClient() {
   const cookieStore = await cookies();
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || FALLBACK_SUPABASE_URL;
   const supabaseAnonKey =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn(
-      '[Supabase Admin Server] Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY.'
-    );
-  }
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    FALLBACK_SUPABASE_ANON_KEY;
 
   return createServerClient<Database>(
-    supabaseUrl || 'https://placeholder.supabase.co',
-    supabaseAnonKey || 'placeholder-anon-key',
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {

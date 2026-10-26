@@ -1,6 +1,8 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { Database } from '@/types/database.types';
 
+const FALLBACK_SUPABASE_URL = 'https://rcxvyfgeduyokdahkrow.supabase.co';
+
 /**
  * Privileged Supabase Admin Client for TEESOULZ Admin Portal
  *
@@ -17,19 +19,22 @@ export function createAdminClient() {
   }
 
   const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.SUPABASE_URL ||
+    FALLBACK_SUPABASE_URL;
   const serviceRoleKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SECRET_KEY;
 
-  if (!supabaseUrl || !serviceRoleKey) {
-    console.warn(
-      '[Supabase Service Role] Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.'
+  if (!serviceRoleKey) {
+    throw new Error(
+      'SUPABASE_SERVICE_ROLE_KEY is required for server admin operations.'
     );
   }
 
   return createSupabaseClient<Database>(
-    supabaseUrl || 'https://placeholder.supabase.co',
-    serviceRoleKey || 'placeholder-service-role-key',
+    supabaseUrl,
+    serviceRoleKey,
     {
       auth: {
         autoRefreshToken: false,
