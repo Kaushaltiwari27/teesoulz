@@ -317,6 +317,15 @@ export const DEFAULT_CMS_DATA: WebsiteCmsData = {
     ],
   },
 
+  footer: {
+    tagline: 'HEAVYWEIGHT STREETWEAR',
+    instagramUrl: 'https://instagram.com',
+    twitterUrl: 'https://twitter.com',
+    youtubeUrl: 'https://youtube.com',
+    spotifyUrl: 'https://spotify.com',
+    copyrightText: '© 2026 TEESOULZ APPAREL PVT LTD. All Rights Reserved.',
+  },
+
   coupons: [...STORE_COUPONS],
   updatedAt: new Date().toISOString(),
 };

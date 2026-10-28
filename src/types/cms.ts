@@ -117,6 +117,15 @@ export interface TrustPerksConfig {
   perks: TrustPerkItem[];
 }
 
+export interface FooterConfig {
+  tagline: string;
+  instagramUrl: string;
+  twitterUrl: string;
+  youtubeUrl: string;
+  spotifyUrl: string;
+  copyrightText: string;
+}
+
 export interface WebsiteCmsData {
   announcementBar: AnnouncementBarConfig;
   heroSlides: HeroSlideConfig[];
@@ -131,6 +140,7 @@ export interface WebsiteCmsData {
   editorialCulture: EditorialCultureConfig;
   customerReviews: CustomerReviewsConfig;
   trustPerks: TrustPerksConfig;
+  footer?: FooterConfig;
   coupons: Coupon[];
   updatedAt: string;
 }

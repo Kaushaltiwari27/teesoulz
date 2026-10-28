@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Check, Plus, Minus, ChevronUp, Shield, Music } from 'lucide-react';
 import { InstagramIcon, TwitterIcon, YoutubeIcon } from '@/components/common/BrandIcons';
+import { useCms } from '@/context/CmsContext';
 
 interface FooterSection {
   id: string;
@@ -67,6 +68,15 @@ const FOOTER_SECTIONS: FooterSection[] = [
 ];
 
 export default function Footer() {
+  const { cms } = useCms();
+  const footerConfig = cms.footer || {
+    tagline: 'HEAVYWEIGHT STREETWEAR',
+    instagramUrl: 'https://instagram.com',
+    twitterUrl: 'https://twitter.com',
+    youtubeUrl: 'https://youtube.com',
+    spotifyUrl: 'https://spotify.com',
+    copyrightText: '© 2026 TEESOULZ APPAREL PVT LTD. All Rights Reserved.',
+  };
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
@@ -131,7 +141,7 @@ export default function Footer() {
                   TEESOULZ
                 </span>
                 <span className="text-[8px] sm:text-[9px] tracking-[0.25em] text-[#888888] uppercase font-semibold mt-0.5">
-                  HEAVYWEIGHT STREETWEAR
+                  {footerConfig.tagline || 'HEAVYWEIGHT STREETWEAR'}
                 </span>
               </div>
             </Link>
@@ -141,7 +151,7 @@ export default function Footer() {
                 Follow Us:
               </span>
               <a
-                href="https://instagram.com"
+                href={footerConfig.instagramUrl || 'https://instagram.com'}
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-[#161616] border border-[#262626] flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all"
@@ -150,7 +160,7 @@ export default function Footer() {
                 <InstagramIcon className="w-4 h-4" />
               </a>
               <a
-                href="https://twitter.com"
+                href={footerConfig.twitterUrl || 'https://twitter.com'}
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-[#161616] border border-[#262626] flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all"
@@ -159,7 +169,7 @@ export default function Footer() {
                 <TwitterIcon className="w-4 h-4" />
               </a>
               <a
-                href="https://youtube.com"
+                href={footerConfig.youtubeUrl || 'https://youtube.com'}
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-[#161616] border border-[#262626] flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all"
@@ -168,7 +178,7 @@ export default function Footer() {
                 <YoutubeIcon className="w-4 h-4" />
               </a>
               <a
-                href="https://spotify.com"
+                href={footerConfig.spotifyUrl || 'https://spotify.com'}
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-[#161616] border border-[#262626] flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all"
@@ -360,7 +370,7 @@ export default function Footer() {
           <div className="pt-8 border-t border-[#222222] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#777777] text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2">
               <Shield className="w-4 h-4 text-[#999999] flex-shrink-0" />
-              <span>© {currentYear} TEESOULZ APPAREL PVT LTD. All Rights Reserved.</span>
+              <span>{footerConfig.copyrightText || `© ${currentYear} TEESOULZ APPAREL PVT LTD. All Rights Reserved.`}</span>
             </div>
 
             {/* Payment Method Badges */}
