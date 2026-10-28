@@ -129,10 +129,12 @@ export async function getProducts(options: GetProductsOptions = {}): Promise<Pro
 
     const { data, error } = await query;
 
-    if (error || !data || data.length === 0) {
-      if (error) console.warn('[Supabase Products] Fetch fallback triggered:', error.message);
+    if (error) {
+      console.warn('[Supabase Products] Fetch fallback triggered:', error.message);
       return filterMockProducts(options);
     }
+
+    if (!data) return [];
 
     let products = data.map(mapDatabaseProductToProduct);
 
@@ -167,18 +169,71 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       `)
       .eq('slug', slug)
       .eq('is_published', true)
-      .single();
+      .maybeSingle();
 
-    if (error || !data) {
-      // Fallback to catalog source
-      return getCatalogSource().find((p) => p.slug === slug) || null;
+    if (error) {
+      console.warn('[Supabase Products] Fetch error for slug ' + slug + ':', error.message);
+      return null;
+    }
+
+    if (!data) {
+      // Product does not exist or was deleted in the admin panel
+      return null;
     }
 
     return mapDatabaseProductToProduct(data);
   } catch (err: unknown) {
     console.warn('[Supabase Products] Single fetch exception:', err);
-    return getCatalogSource().find((p) => p.slug === slug) || null;
+    return null;
   }
+}
+
+export async function getLiveCategories(): Promise<{ id: string; name: string; slug: string; image?: string; description?: string }[]> {
+  try {
+    const supabase = getPublicCatalogClient();
+    const { data, error } = await supabase
+      .from('categories')
+      .select('id, name, slug, image_url, description')
+      .eq('is_active', true)
+      .order('name');
+
+    if (!error && data && data.length > 0) {
+      return data.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        image: c.image_url || undefined,
+        description: c.description || undefined,
+      }));
+    }
+  } catch (err) {
+    console.warn('[Supabase Categories] Live fetch exception:', err);
+  }
+  return [];
+}
+
+export async function getLiveCollections(): Promise<{ id: string; name: string; slug: string; image?: string; description?: string }[]> {
+  try {
+    const supabase = getPublicCatalogClient();
+    const { data, error } = await supabase
+      .from('collections')
+      .select('id, name, slug, banner_url, description')
+      .eq('is_active', true)
+      .order('name');
+
+    if (!error && data && data.length > 0) {
+      return data.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        image: c.banner_url || undefined,
+        description: c.description || undefined,
+      }));
+    }
+  } catch (err) {
+    console.warn('[Supabase Collections] Live fetch exception:', err);
+  }
+  return [];
 }
 
 // Fallback helper using mockData.ts and custom products

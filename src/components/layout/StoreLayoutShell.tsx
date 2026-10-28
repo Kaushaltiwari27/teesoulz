@@ -10,13 +10,20 @@ import QuickViewModal from '@/components/common/QuickViewModal';
 import SizeGuideModal from '@/components/common/SizeGuideModal';
 import ToastContainer from '@/components/common/ToastContainer';
 import { CmsProvider } from '@/context/CmsContext';
+import { WebsiteCmsData } from '@/types/cms';
 
-export default function StoreLayoutShell({ children }: { children: React.ReactNode }) {
+export default function StoreLayoutShell({
+  children,
+  initialCms,
+}: {
+  children: React.ReactNode;
+  initialCms?: WebsiteCmsData;
+}) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
 
   return (
-    <CmsProvider>
+    <CmsProvider initialCms={initialCms}>
       {isAdmin ? (
         // Dedicated Isolated Admin Portal (No Storefront Header/Footer/Drawers)
         <div className="min-h-screen bg-[#080808] text-white">

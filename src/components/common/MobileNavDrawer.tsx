@@ -13,7 +13,9 @@ interface MobileNavDrawerProps {
 }
 
 export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
-  const { wishlistCount, cartCount, openSearch } = useStore();
+  const { wishlistCount, cartCount, openSearch, categories, collections } = useStore();
+  const activeCategories = categories && categories.length > 0 ? categories : CATEGORIES_DATA;
+  const activeCollections = collections && collections.length > 0 ? collections : COLLECTIONS_DATA;
 
   // Lock background scroll when open
   useEffect(() => {
@@ -156,7 +158,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                   <ChevronRight className="w-4 h-4 text-[#B8B8B8]" />
                 </Link>
               </li>
-              {CATEGORIES_DATA.map((cat, idx) => (
+              {activeCategories.map((cat: any, idx: number) => (
                 <li key={cat.slug}>
                   <Link
                     href={`/category/${cat.slug}`}
@@ -216,7 +218,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                   </span>
                 </Link>
               </li>
-              {COLLECTIONS_DATA.map((col) => (
+              {activeCollections.map((col: any) => (
                 <li key={col.slug}>
                   <Link
                     href={`/collections/${col.slug}`}

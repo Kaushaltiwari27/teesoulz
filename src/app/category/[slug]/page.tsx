@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
-import { getProducts } from '@/lib/supabase/products';
+import { getProducts, getLiveCategories } from '@/lib/supabase/products';
 import { PRODUCTS, CATEGORIES_DATA } from '@/data/mockData';
 import ProductGrid from '@/components/product/ProductGrid';
 import { Metadata } from 'next';
@@ -26,7 +26,8 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const category = CATEGORIES_DATA.find((c) => c.slug === slug);
+  const liveCats = await getLiveCategories();
+  const category = liveCats.find((c) => c.slug === slug) || CATEGORIES_DATA.find((c) => c.slug === slug);
   const title = category ? `${category.name} — TEESOULZ Indian Streetwear` : `${slug.replace('-', ' ').toUpperCase()} Streetwear — TEESOULZ`;
   const description = category?.description || `Explore ${slug} streetwear drops by TEESOULZ. Crafted with 260-420 GSM heavyweight combed cotton in India.`;
   const url = `https://teesoulz.in/category/${slug}`;
@@ -49,9 +50,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
 
-  const categoryMeta = CATEGORIES_DATA.find((c) => c.slug === slug);
+  const liveCats = await getLiveCategories();
+  const categoryMeta = liveCats.find((c) => c.slug === slug) || CATEGORIES_DATA.find((c) => c.slug === slug);
   const liveProducts = await getProducts();
-  const allProducts = liveProducts && liveProducts.length > 0 ? liveProducts : PRODUCTS;
+  const allProducts = Array.isArray(liveProducts) && liveProducts.length > 0 ? liveProducts : PRODUCTS;
 
   // Match products by category or gender
   const products = allProducts.filter((p) => {
@@ -84,7 +86,7 @@ export default async function CategoryPage({ params }: Props) {
 
         {/* Category Header Banner */}
         <div className="relative mb-10 overflow-hidden bg-[#080808] text-white border border-[#222222] p-8 sm:p-12">
-          {categoryMeta && (
+          {categoryMeta?.image && (
             <div className="absolute inset-0 opacity-20 pointer-events-none">
               <Image
                 src={categoryMeta.image}

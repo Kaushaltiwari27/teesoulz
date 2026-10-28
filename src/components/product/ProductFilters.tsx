@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, SlidersHorizontal, RotateCcw } from 'lucide-react';
+import { useStore } from '@/context/StoreContext';
 
 export interface FilterOptions {
   category: string;
@@ -51,6 +52,13 @@ export default function ProductFilters({
   totalCount,
 }: ProductFiltersProps) {
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const { categories } = useStore();
+  const activeCategoryOptions = [
+    { label: 'All Categories', value: 'all' },
+    ...(categories && categories.length > 0
+      ? categories.map((c: any) => ({ label: c.name, value: c.slug }))
+      : CATEGORIES.slice(1)),
+  ];
 
   // Lock scroll on mobile drawer
   useEffect(() => {
@@ -194,7 +202,7 @@ export default function ProductFilters({
       <div className="hidden lg:flex flex-wrap items-center gap-6 pt-4 text-xs">
         {/* Category Pills */}
         <div className="flex items-center gap-1.5">
-          {CATEGORIES.map((cat) => (
+          {activeCategoryOptions.map((cat) => (
             <button
               key={cat.value}
               onClick={() => onFilterChange({ ...filters, category: cat.value })}
@@ -264,7 +272,7 @@ export default function ProductFilters({
                   Category
                 </h4>
                 <div className="space-y-2">
-                  {CATEGORIES.map((cat) => (
+                  {activeCategoryOptions.map((cat) => (
                     <label key={cat.value} className="flex items-center gap-2 text-xs cursor-pointer">
                       <input
                         type="radio"

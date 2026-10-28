@@ -14,7 +14,7 @@ export const instant = false;
 
 export default async function NewInPage() {
   const liveNew = await getProducts({ isNewArrival: true });
-  const newProducts = liveNew && liveNew.length > 0 
+  const newProducts = Array.isArray(liveNew) && liveNew.length > 0 
     ? liveNew 
     : PRODUCTS.filter((p) => p.isNewArrival || p.tags.includes('New In'));
 

@@ -5,9 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { CATEGORIES_DATA } from '@/data/mockData';
+import { useStore } from '@/context/StoreContext';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 
 export default function ShopByCategory() {
+  const { categories } = useStore();
+  const displayCategories = categories && categories.length > 0 ? categories : CATEGORIES_DATA;
   return (
     <section className="py-16 sm:py-24 bg-white border-b border-[#E5E5E5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,7 +38,7 @@ export default function ShopByCategory() {
 
         {/* Category Grid with Staggered ScrollReveal */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-          {CATEGORIES_DATA.map((cat, index) => (
+          {displayCategories.map((cat: any, index: number) => (
             <ScrollReveal key={cat.slug} delay={index * 0.08} direction="up">
               <Link
                 href={`/category/${cat.slug}`}

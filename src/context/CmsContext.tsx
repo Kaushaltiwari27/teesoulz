@@ -14,6 +14,8 @@ import {
 } from '@/types/cms';
 import { Coupon } from '@/types';
 import { DEFAULT_CMS_DATA } from '@/data/defaultCmsData';
+import { createClient } from '@/lib/supabase/client';
+import { parseCmsRowsIntoData } from '@/lib/supabase/cms';
 
 interface CmsContextType {
   cms: WebsiteCmsData;
@@ -41,34 +43,85 @@ const CmsContext = createContext<CmsContextType | undefined>(undefined);
 
 const CMS_STORAGE_KEY = 'teesoulz_cms_data';
 
-export function CmsProvider({ children }: { children: React.ReactNode }) {
-  const [cms, setCms] = useState<WebsiteCmsData>(DEFAULT_CMS_DATA);
+export function CmsProvider({
+  children,
+  initialCms,
+}: {
+  children: React.ReactNode;
+  initialCms?: WebsiteCmsData;
+}) {
+  const [cms, setCms] = useState<WebsiteCmsData>(initialCms || DEFAULT_CMS_DATA);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Hydrate from localStorage on client mount
+  // Helper to fetch live CMS configuration from Supabase cms_settings table
+  const fetchLiveCmsFromSupabase = useCallback(async () => {
+    try {
+      const supabase = createClient();
+      const { data: rows, error } = await supabase
+        .from('cms_settings')
+        .select('key, value');
+
+      if (error || !rows || rows.length === 0) return;
+
+      setCms((prev) => {
+        const updated = parseCmsRowsIntoData(rows, prev);
+        try {
+          localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+    } catch (e) {
+      console.warn('Failed to sync live CMS data from Supabase:', e);
+    }
+  }, []);
+
+  // Hydrate from initialCms / localStorage on client mount, then sync with live Supabase database
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(CMS_STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        // Merge with defaults in case of missing keys
-        setCms((prev) => ({
-          ...DEFAULT_CMS_DATA,
-          ...parsed,
-          announcementBar: { ...DEFAULT_CMS_DATA.announcementBar, ...(parsed.announcementBar || {}) },
-          curatedSections: { ...DEFAULT_CMS_DATA.curatedSections, ...(parsed.curatedSections || {}) },
-          campaignBanners: { ...DEFAULT_CMS_DATA.campaignBanners, ...(parsed.campaignBanners || {}) },
-          editorialCulture: { ...DEFAULT_CMS_DATA.editorialCulture, ...(parsed.editorialCulture || {}) },
-          customerReviews: { ...DEFAULT_CMS_DATA.customerReviews, ...(parsed.customerReviews || {}) },
-          trustPerks: { ...DEFAULT_CMS_DATA.trustPerks, ...(parsed.trustPerks || {}) },
-        }));
+      if (!initialCms) {
+        const stored = localStorage.getItem(CMS_STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setCms((prev) => ({
+            ...DEFAULT_CMS_DATA,
+            ...parsed,
+            announcementBar: { ...DEFAULT_CMS_DATA.announcementBar, ...(parsed.announcementBar || {}) },
+            curatedSections: { ...DEFAULT_CMS_DATA.curatedSections, ...(parsed.curatedSections || {}) },
+            campaignBanners: { ...DEFAULT_CMS_DATA.campaignBanners, ...(parsed.campaignBanners || {}) },
+            editorialCulture: { ...DEFAULT_CMS_DATA.editorialCulture, ...(parsed.editorialCulture || {}) },
+            customerReviews: { ...DEFAULT_CMS_DATA.customerReviews, ...(parsed.customerReviews || {}) },
+            trustPerks: { ...DEFAULT_CMS_DATA.trustPerks, ...(parsed.trustPerks || {}) },
+          }));
+        }
       }
     } catch (e) {
       console.warn('Failed to parse CMS data from localStorage:', e);
     } finally {
       setIsHydrated(true);
     }
-  }, []);
+
+    // Initial Live Sync from Supabase
+    fetchLiveCmsFromSupabase();
+
+    // Subscribe to live Realtime updates from Supabase cms_settings
+    try {
+      const supabase = createClient();
+      const channel = supabase
+        .channel('public:cms_settings')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'cms_settings' },
+          () => {
+            fetchLiveCmsFromSupabase();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    } catch {}
+  }, [fetchLiveCmsFromSupabase]);
 
   // Sync to localStorage and broadcast whenever cms changes
   const saveCmsData = useCallback((newData: WebsiteCmsData) => {

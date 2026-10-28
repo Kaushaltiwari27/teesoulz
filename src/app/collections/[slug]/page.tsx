@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ChevronRight, Sparkles } from 'lucide-react';
-import { getProducts } from '@/lib/supabase/products';
+import { getProducts, getLiveCollections } from '@/lib/supabase/products';
 import { PRODUCTS, COLLECTIONS_DATA } from '@/data/mockData';
 import ProductGrid from '@/components/product/ProductGrid';
 import { Metadata } from 'next';
@@ -20,7 +20,8 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const col = COLLECTIONS_DATA.find((c) => c.slug === slug);
+  const liveCols = await getLiveCollections();
+  const col = liveCols.find((c) => c.slug === slug) || COLLECTIONS_DATA.find((c) => c.slug === slug);
   const title = col ? `${col.name} Capsule Collection — TEESOULZ` : 'Streetwear Collections — TEESOULZ';
   const description = col?.description || 'Explore limited capsule releases from TEESOULZ Indian streetwear.';
   const url = `https://teesoulz.in/collections/${slug}`;
@@ -43,9 +44,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CollectionPage({ params }: Props) {
   const { slug } = await params;
 
-  const collection = COLLECTIONS_DATA.find((c) => c.slug === slug);
+  const liveCols = await getLiveCollections();
+  const collection = liveCols.find((c) => c.slug === slug) || COLLECTIONS_DATA.find((c) => c.slug === slug);
   const liveProducts = await getProducts();
-  const allProducts = liveProducts && liveProducts.length > 0 ? liveProducts : PRODUCTS;
+  const allProducts = Array.isArray(liveProducts) && liveProducts.length > 0 ? liveProducts : PRODUCTS;
   const products = allProducts.filter((p) => p.collections.includes(slug));
 
   const displayName = collection ? collection.name : slug.replace('-', ' ').toUpperCase();
@@ -68,7 +70,7 @@ export default async function CollectionPage({ params }: Props) {
 
         {/* Collection Hero Header */}
         <div className="relative mb-10 overflow-hidden bg-[#080808] text-white border border-[#222222] p-8 sm:p-14">
-          {collection && (
+          {collection?.image && (
             <div className="absolute inset-0 opacity-25 pointer-events-none">
               <Image
                 src={collection.image}
@@ -82,7 +84,7 @@ export default async function CollectionPage({ params }: Props) {
           <div className="relative z-10 max-w-2xl space-y-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 text-[#B8B8B8] text-[10px] font-bold uppercase tracking-widest">
               <Sparkles className="w-3 h-3 text-white" />
-              <span>{collection?.tagline || 'LIMITED CAPSULE RELEASE'}</span>
+              <span>{(collection as any)?.tagline || 'LIMITED CAPSULE RELEASE'}</span>
             </div>
             <h1 className="text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-white">
               {displayName}

@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CATEGORIES_DATA, COLLECTIONS_DATA } from '@/data/mockData';
+import { useStore } from '@/context/StoreContext';
 import { ArrowRight } from 'lucide-react';
 
 interface MegaMenuProps {
@@ -12,6 +13,10 @@ interface MegaMenuProps {
 }
 
 export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
+  const { categories, collections } = useStore();
+  const activeCategories = categories && categories.length > 0 ? categories : CATEGORIES_DATA;
+  const activeCollections = collections && collections.length > 0 ? collections : COLLECTIONS_DATA;
+
   if (!isOpen) return null;
 
   return (
@@ -36,7 +41,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
                   Shop All Products
                 </Link>
               </li>
-              {CATEGORIES_DATA.map((cat) => (
+              {activeCategories.map((cat: any) => (
                 <li key={cat.slug}>
                   <Link
                     href={`/category/${cat.slug}`}
@@ -84,7 +89,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
                   Limited Time Offers
                 </Link>
               </li>
-              {COLLECTIONS_DATA.map((col) => (
+              {activeCollections.map((col: any) => (
                 <li key={col.slug}>
                   <Link
                     href={`/collections/${col.slug}`}

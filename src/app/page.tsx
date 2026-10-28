@@ -7,7 +7,7 @@ export const instant = false;
 
 export default async function HomePage() {
   const liveProducts = await getProducts();
-  const products = liveProducts && liveProducts.length > 0 ? liveProducts : PRODUCTS;
+  const products = Array.isArray(liveProducts) && liveProducts.length > 0 ? liveProducts : PRODUCTS;
 
   return <HomeSectionsClient initialProducts={products} />;
 }

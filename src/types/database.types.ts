@@ -540,6 +540,57 @@ export type Database = {
         };
         Relationships: [];
       };
+      activity_logs: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          action: string;
+          entity_type: string;
+          entity_id: string | null;
+          details: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          action: string;
+          entity_type: string;
+          entity_id?: string | null;
+          details?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          action?: string;
+          entity_type?: string;
+          entity_id?: string | null;
+          details?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      cms_settings: {
+        Row: {
+          key: string;
+          value: Json;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          key: string;
+          value?: Json;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          key?: string;
+          value?: Json;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import { COLLECTIONS_DATA } from '@/data/mockData';
+import { getLiveCollections } from '@/lib/supabase/products';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,7 +14,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CollectionsPage() {
+export const instant = false;
+
+export default async function CollectionsPage() {
+  const liveCols = await getLiveCollections();
+  const collections = liveCols && liveCols.length > 0 ? liveCols : COLLECTIONS_DATA;
   return (
     <div className="bg-white min-h-screen py-10 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,7 +46,7 @@ export default function CollectionsPage() {
 
         {/* Collections Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {COLLECTIONS_DATA.map((col, idx) => (
+          {collections.map((col: any, idx: number) => (
             <Link
               key={col.slug}
               href={`/collections/${col.slug}`}

@@ -12,9 +12,10 @@ import {
   UserProfile,
   Coupon,
 } from '@/types';
-import { STORE_COUPONS, PRODUCTS } from '@/data/mockData';
+import { STORE_COUPONS, PRODUCTS, CATEGORIES_DATA, COLLECTIONS_DATA } from '@/data/mockData';
 import { INITIAL_ORDERS } from '@/data/mockOrders';
 import { createClient } from '@/lib/supabase/client';
+import { getProducts, getLiveCategories, getLiveCollections } from '@/lib/supabase/products';
 
 export interface ToastMessage {
   id: string;
@@ -87,6 +88,10 @@ interface StoreContextType {
 
   // Products Catalog (Admin & Live Store Sync)
   products: Product[];
+  categories: any[];
+  collections: any[];
+  refreshProducts: () => Promise<void>;
+  refreshTaxonomy: () => Promise<void>;
   addProduct: (product: Omit<Product, 'id' | 'createdAt'> | Product) => Promise<Product>;
   updateProduct: (product: Product) => Promise<void>;
   deleteProduct: (productId: string) => Promise<void>;
@@ -134,8 +139,32 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [allOrders, setAllOrders] = useState<Order[]>(INITIAL_ORDERS);
   const [products, setProducts] = useState<Product[]>(PRODUCTS);
+  const [categories, setCategories] = useState<any[]>(CATEGORIES_DATA);
+  const [collections, setCollections] = useState<any[]>(COLLECTIONS_DATA);
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
+
+  // Live Refresh Helpers
+  const refreshProducts = useCallback(async () => {
+    try {
+      const live = await getProducts();
+      if (live && Array.isArray(live)) {
+        setProducts(live);
+      }
+    } catch (e) {
+      console.warn('Failed to refresh live products from Supabase:', e);
+    }
+  }, []);
+
+  const refreshTaxonomy = useCallback(async () => {
+    try {
+      const [cats, cols] = await Promise.all([getLiveCategories(), getLiveCollections()]);
+      if (cats && cats.length > 0) setCategories(cats);
+      if (cols && cols.length > 0) setCollections(cols);
+    } catch (e) {
+      console.warn('Failed to refresh taxonomy from Supabase:', e);
+    }
+  }, []);
 
   // Toast helper
   const addToast = useCallback((title: string, message?: string, type: 'success' | 'error' | 'info' = 'info') => {
@@ -150,7 +179,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Hydrate from localStorage
+  // Hydrate from localStorage & sync live data from Supabase
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem('teesoulz_cart');
@@ -180,17 +209,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           .catch(() => {});
       }
 
-      const storedProducts = localStorage.getItem('teesoulz_products');
-      if (storedProducts) {
-        setProducts(JSON.parse(storedProducts));
-      } else {
-        fetch('/api/admin/products')
-          .then((r) => r.json())
-          .then((data) => {
-            if (data.success && data.products && data.products.length > 0) setProducts(data.products);
-          })
-          .catch(() => {});
-      }
+      // Clear legacy static products cache to ensure live database sync
+      try {
+        localStorage.removeItem('teesoulz_products');
+      } catch {}
 
       const storedCoupon = localStorage.getItem('teesoulz_coupon');
       if (storedCoupon) setAppliedCoupon(JSON.parse(storedCoupon));
@@ -202,7 +224,40 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsHydrated(true);
     }
-  }, []);
+
+    // Immediately load live products and taxonomy from Supabase
+    refreshProducts();
+    refreshTaxonomy();
+
+    // Subscribe to live Realtime database changes
+    try {
+      const supabase = createClient();
+      const channel = supabase
+        .channel('public:store_sync')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
+          refreshProducts();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'product_variants' }, () => {
+          refreshProducts();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'inventory' }, () => {
+          refreshProducts();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
+          refreshTaxonomy();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'collections' }, () => {
+          refreshTaxonomy();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    } catch (subErr) {
+      console.warn('Realtime sync subscription failed:', subErr);
+    }
+  }, [refreshProducts, refreshTaxonomy]);
 
   // Listen for cross-component products & orders updates
   useEffect(() => {
@@ -1084,6 +1139,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         updateOrderStatus,
         deleteOrder,
         products,
+        categories,
+        collections,
+        refreshProducts,
+        refreshTaxonomy,
         addProduct,
         updateProduct,
         deleteProduct,

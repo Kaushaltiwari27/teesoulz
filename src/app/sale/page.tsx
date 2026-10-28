@@ -14,7 +14,7 @@ export const instant = false;
 
 export default async function SalePage() {
   const liveProducts = await getProducts();
-  const allProducts = liveProducts && liveProducts.length > 0 ? liveProducts : PRODUCTS;
+  const allProducts = Array.isArray(liveProducts) && liveProducts.length > 0 ? liveProducts : PRODUCTS;
   const saleProducts = allProducts.filter((p) => (p.discountPercent || 0) > 0);
 
   return (

@@ -14,7 +14,7 @@ export const instant = false;
 
 export default async function BestsellersPage() {
   const liveBestsellers = await getProducts({ isBestseller: true });
-  const bestsellers = liveBestsellers && liveBestsellers.length > 0 
+  const bestsellers = Array.isArray(liveBestsellers) && liveBestsellers.length > 0 
     ? liveBestsellers 
     : PRODUCTS.filter((p) => p.isBestseller);
 
