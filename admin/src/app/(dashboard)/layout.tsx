@@ -27,7 +27,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbfbfb] text-zinc-950 flex flex-col antialiased">
+    <div className="min-h-screen bg-[#f8f9fa] text-zinc-950 flex flex-col antialiased">
       <Sidebar
         mobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
