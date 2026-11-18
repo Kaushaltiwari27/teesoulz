@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import {
   FileText,
   Save,
@@ -287,6 +288,22 @@ export default function WebsiteContentPage() {
           <Save className="w-4 h-4" />
           <span>{isSaving ? 'Syncing to Supabase...' : 'Save & Publish Live'}</span>
         </button>
+      </div>
+
+      {/* Pro Tip Banner */}
+      <div className="bg-blue-50/80 border border-blue-200 rounded-xl p-3.5 text-xs text-blue-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+        <div className="flex items-center gap-2">
+          <span className="text-base">⚡</span>
+          <span>
+            <strong>Pro Tip:</strong> All homepage sections (Hero, Categories, Grids, Banners, Editorial Culture, Reviews, Trust Perks, & Ticker) can now also be managed in one unified place in <strong>Homepage Builder</strong>!
+          </span>
+        </div>
+        <Link
+          href="/homepage-builder"
+          className="font-bold underline text-blue-700 hover:text-blue-900 shrink-0"
+        >
+          Open Homepage Builder →
+        </Link>
       </div>
 
       {/* Navigation Sub-Tabs */}

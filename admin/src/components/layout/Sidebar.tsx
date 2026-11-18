@@ -53,7 +53,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     group: 'STOREFRONT EXPERIENCE',
     items: [
-      { label: 'Homepage Builder', href: '/homepage-builder', icon: Sliders },
+      { label: 'Homepage Builder', href: '/homepage-builder', icon: Sliders, badge: '8 Sections' },
       { label: 'Website Content', href: '/website-content', icon: FileText },
       { label: 'Navigation', href: '/navigation', icon: Compass },
       { label: 'Media Library', href: '/media', icon: ImageIcon },

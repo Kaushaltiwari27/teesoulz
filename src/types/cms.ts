@@ -129,6 +129,7 @@ export interface FooterConfig {
 export interface WebsiteCmsData {
   announcementBar: AnnouncementBarConfig;
   heroSlides: HeroSlideConfig[];
+  featuredCategoriesEnabled?: boolean;
   featuredCategories: FeaturedCategoryCard[];
   curatedSections: {
     newIn: CuratedSectionConfig;

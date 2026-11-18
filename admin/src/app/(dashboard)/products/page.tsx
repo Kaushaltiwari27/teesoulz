@@ -45,6 +45,8 @@ export default function ProductsPage() {
   const [selectedStatus, setSelectedStatus] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const storefrontUrl = process.env.NEXT_PUBLIC_STOREFRONT_URL || 'https://teesoulz.vercel.app';
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -141,6 +143,45 @@ export default function ProductsPage() {
     const start = (currentPage - 1) * pageSize;
     return filteredProducts.slice(start, start + pageSize);
   }, [filteredProducts, currentPage]);
+
+  const publishedCount = useMemo(() => products.filter((p) => p.is_published).length, [products]);
+  const draftCount = useMemo(() => products.filter((p) => !p.is_published).length, [products]);
+
+  // Fast 1-click Publish / Unpublish Toggle
+  const handleTogglePublish = async (p: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setTogglingId(p.id);
+    const newStatus = !p.is_published;
+    try {
+      const supabase = createClient();
+      const { error: updateErr } = await supabase
+        .from('products')
+        .update({ is_published: newStatus, updated_at: new Date().toISOString() })
+        .eq('id', p.id);
+
+      if (updateErr) throw updateErr;
+
+      setProducts((prev) =>
+        prev.map((item) => (item.id === p.id ? { ...item, is_published: newStatus } : item))
+      );
+
+      await logActivity(
+        newStatus ? 'PRODUCT_PUBLISHED' : 'PRODUCT_UNPUBLISHED',
+        'product',
+        p.id,
+        { name: p.name, is_published: newStatus }
+      );
+
+      success(
+        newStatus ? 'Garment Published!' : 'Moved to Drafts',
+        `"${p.name}" is now ${newStatus ? 'live on your storefront' : 'hidden from storefront customers'}.`
+      );
+    } catch (err: any) {
+      error('Status Update Failed', err.message);
+    } finally {
+      setTogglingId(null);
+    }
+  };
 
   // Open Add Modal
   const handleOpenAdd = () => {
@@ -502,52 +543,123 @@ export default function ProductsPage() {
         </button>
       </div>
 
-      {/* Filter and Search Bar */}
+      {/* Storefront Sync & Visibility Guide Banner */}
+      <div className="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4 text-xs text-emerald-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg">⚡</span>
+          <div>
+            <span className="font-bold">Storefront Live Sync:</span> Garments marked with{' '}
+            <span className="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-[11px]">
+              Published
+            </span>{' '}
+            are live on your customer storefront. Click any status badge in the table below to publish or hide instantly.
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-[11px] font-mono bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">
+            Live: {publishedCount} / {products.length}
+          </span>
+        </div>
+      </div>
+
+      {/* Filter and Search Bar with Quick Status Pills */}
       <Card className="p-4">
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="flex-1 relative">
-            <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search garments by name or slug..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-zinc-100">
+            <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mr-1">
+              Quick Filter:
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedStatus('ALL');
                 setCurrentPage(1);
               }}
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-zinc-200 text-xs text-zinc-900 placeholder-zinc-400 focus:outline-hidden focus:border-black"
-            />
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                selectedStatus === 'ALL'
+                  ? 'bg-black text-white shadow-2xs'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+              }`}
+            >
+              All Garments ({products.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedStatus('PUBLISHED');
+                setCurrentPage(1);
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                selectedStatus === 'PUBLISHED'
+                  ? 'bg-emerald-600 text-white shadow-2xs'
+                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span>Live on Store ({publishedCount})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedStatus('DRAFT');
+                setCurrentPage(1);
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                selectedStatus === 'DRAFT'
+                  ? 'bg-zinc-800 text-white shadow-2xs'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-zinc-400" />
+              <span>Drafts / Hidden ({draftCount})</span>
+            </button>
           </div>
 
-          <div className="flex gap-2.5 flex-wrap sm:flex-nowrap">
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="px-3 py-2 rounded-lg border border-zinc-200 text-xs bg-white text-zinc-800 focus:outline-hidden cursor-pointer"
-            >
-              <option value="ALL">All Categories</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="flex-1 relative">
+              <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search garments by name or slug..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full pl-9 pr-4 py-2 rounded-lg border border-zinc-200 text-xs text-zinc-900 placeholder-zinc-400 focus:outline-hidden focus:border-black"
+              />
+            </div>
 
-            <select
-              value={selectedStatus}
-              onChange={(e) => {
-                setSelectedStatus(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="px-3 py-2 rounded-lg border border-zinc-200 text-xs bg-white text-zinc-800 focus:outline-hidden cursor-pointer"
-            >
-              <option value="ALL">All Status</option>
-              <option value="PUBLISHED">Published</option>
-              <option value="DRAFT">Draft</option>
-            </select>
+            <div className="flex gap-2.5 flex-wrap sm:flex-nowrap">
+              <select
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="px-3 py-2 rounded-lg border border-zinc-200 text-xs bg-white text-zinc-800 focus:outline-hidden cursor-pointer"
+              >
+                <option value="ALL">All Categories</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={selectedStatus}
+                onChange={(e) => {
+                  setSelectedStatus(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="px-3 py-2 rounded-lg border border-zinc-200 text-xs bg-white text-zinc-800 focus:outline-hidden cursor-pointer"
+              >
+                <option value="ALL">All Status</option>
+                <option value="PUBLISHED">Published Only</option>
+                <option value="DRAFT">Drafts Only</option>
+              </select>
+            </div>
           </div>
         </div>
       </Card>
@@ -570,12 +682,12 @@ export default function ProductsPage() {
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-zinc-200 bg-zinc-50/70 text-zinc-500 font-mono">
-                  <th className="py-3 px-4 font-semibold">GARMENT</th>
-                  <th className="py-3 px-4 font-semibold">CATEGORY</th>
-                  <th className="py-3 px-4 font-semibold">STOCK</th>
-                  <th className="py-3 px-4 font-semibold">PRICE</th>
-                  <th className="py-3 px-4 font-semibold">STATUS</th>
-                  <th className="py-3 px-4 font-semibold text-right">ACTIONS</th>
+                  <th className="py-3.5 px-4 font-semibold">GARMENT</th>
+                  <th className="py-3.5 px-4 font-semibold">CATEGORY</th>
+                  <th className="py-3.5 px-4 font-semibold">STOCK</th>
+                  <th className="py-3.5 px-4 font-semibold">PRICE</th>
+                  <th className="py-3.5 px-4 font-semibold">STATUS (CLICK TO TOGGLE)</th>
+                  <th className="py-3.5 px-4 font-semibold text-right">ACTIONS</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100">
@@ -588,12 +700,13 @@ export default function ProductsPage() {
                   const primaryImage =
                     p.images?.[0] ||
                     'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=200&auto=format&fit=crop&q=80';
+                  const isToggling = togglingId === p.id;
 
                   return (
                     <tr key={p.id} className="hover:bg-zinc-50/60 transition-colors">
-                      <td className="py-3 px-4">
+                      <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-12 rounded-md bg-zinc-100 border border-zinc-200 overflow-hidden relative shrink-0">
+                          <div className="w-10 h-12 rounded-lg bg-zinc-100 border border-zinc-200 overflow-hidden relative shrink-0">
                             <Image
                               src={primaryImage}
                               alt={p.name}
@@ -603,7 +716,7 @@ export default function ProductsPage() {
                             />
                           </div>
                           <div className="min-w-0">
-                            <div className="font-bold text-zinc-950 truncate max-w-[220px]">
+                            <div className="font-bold text-zinc-950 truncate max-w-[260px]">
                               {p.name}
                             </div>
                             <div className="text-[11px] text-zinc-400 font-mono truncate">
@@ -625,11 +738,11 @@ export default function ProductsPage() {
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 text-zinc-600 font-medium">
+                      <td className="py-3.5 px-4 text-zinc-600 font-medium">
                         {p.category?.name || 'Uncategorized'}
                       </td>
 
-                      <td className="py-3 px-4 font-mono">
+                      <td className="py-3.5 px-4 font-mono">
                         <span
                           className={`font-semibold ${
                             totalStock <= 5
@@ -646,7 +759,7 @@ export default function ProductsPage() {
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 font-mono font-bold text-zinc-900">
+                      <td className="py-3.5 px-4 font-mono font-bold text-zinc-900">
                         ₹{(p.price_in_paise / 100).toLocaleString('en-IN')}
                         {p.mrp_in_paise > p.price_in_paise && (
                           <span className="text-[10px] font-normal text-zinc-400 line-through ml-1.5">
@@ -655,18 +768,44 @@ export default function ProductsPage() {
                         )}
                       </td>
 
-                      <td className="py-3 px-4">
-                        <Badge
-                          variant={p.is_published ? 'success' : 'neutral'}
-                          size="sm"
-                          dot
+                      <td className="py-3.5 px-4">
+                        <button
+                          type="button"
+                          disabled={isToggling}
+                          onClick={(e) => handleTogglePublish(p, e)}
+                          title={
+                            p.is_published
+                              ? 'Currently Live. Click to unpublish & hide from customers.'
+                              : 'Currently Draft. Click to publish & show live on store.'
+                          }
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all cursor-pointer shadow-2xs ${
+                            p.is_published
+                              ? 'bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 hover:border-emerald-400'
+                              : 'bg-zinc-100 text-zinc-600 border border-zinc-200 hover:bg-zinc-200 hover:border-zinc-300'
+                          } ${isToggling ? 'opacity-50 cursor-wait' : ''}`}
                         >
-                          {p.is_published ? 'Published' : 'Draft'}
-                        </Badge>
+                          <span
+                            className={`w-2 h-2 rounded-full ${
+                              p.is_published ? 'bg-emerald-500' : 'bg-zinc-400'
+                            }`}
+                          />
+                          <span>
+                            {isToggling ? 'Updating...' : p.is_published ? 'Published (Live)' : 'Draft (Hidden)'}
+                          </span>
+                        </button>
                       </td>
 
-                      <td className="py-3 px-4 text-right">
+                      <td className="py-3.5 px-4 text-right">
                         <div className="inline-flex items-center gap-1">
+                          <a
+                            href={`${storefrontUrl}/product/${p.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Preview on Live Storefront"
+                            className="p-1.5 rounded-md hover:bg-zinc-100 text-zinc-400 hover:text-black transition-colors cursor-pointer"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
                           <button
                             type="button"
                             onClick={() => handleOpenEdit(p)}

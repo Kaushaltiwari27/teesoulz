@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { Menu, LogOut, Shield } from 'lucide-react';
+import { Menu, LogOut, Shield, ExternalLink, Globe } from 'lucide-react';
 import { useAdminAuth } from '@/context/AdminAuthContext';
 import Badge from '../ui/Badge';
 
@@ -61,6 +61,19 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-3">
+        {/* Quick View Live Store Link */}
+        <a
+          href={process.env.NEXT_PUBLIC_STOREFRONT_URL || 'https://teesoulz.vercel.app'}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Open live storefront website in new tab"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 hover:border-zinc-300 text-zinc-800 text-xs font-bold transition-all cursor-pointer shadow-2xs"
+        >
+          <Globe className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="hidden sm:inline">Live Store</span>
+          <ExternalLink className="w-3 h-3 text-zinc-400" />
+        </a>
+
         {/* User Badge */}
         <div className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-zinc-200 bg-zinc-50">
           <div className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">

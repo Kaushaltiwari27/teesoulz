@@ -30,6 +30,9 @@ export function parseCmsRowsIntoData(rows: any[], baseData: WebsiteCmsData = DEF
       }
 
       // 2. 2-Column Category Gallery (Shop Mens / Shop Womens)
+      if (val.featuredCategoriesEnabled !== undefined) {
+        updated.featuredCategoriesEnabled = val.featuredCategoriesEnabled;
+      }
       if (Array.isArray(val.featuredCategories) && val.featuredCategories.length > 0) {
         updated.featuredCategories = val.featuredCategories;
       }

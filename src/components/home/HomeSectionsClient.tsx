@@ -61,7 +61,7 @@ export default function HomeSectionsClient({ initialProducts }: { initialProduct
       <HeroCampaign />
 
       {/* 2. 2-Column Gallery: SHOP MENS & SHOP WOMENS with Explore buttons */}
-      <FeaturedCategories />
+      {cms.featuredCategoriesEnabled !== false && <FeaturedCategories />}
 
       {/* 3. Section #4: New In featured collection with "Shop New Arrivals" */}
       {cms.curatedSections.newIn.enabled && (
