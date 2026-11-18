@@ -565,8 +565,8 @@ export default function ProductsPage() {
       {/* Filter and Search Bar with Quick Status Pills */}
       <Card className="p-4">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-zinc-100">
-            <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mr-1">
+          <div className="flex items-center gap-2 pb-3 border-b border-zinc-100 overflow-x-auto scrollbar-none flex-nowrap sm:flex-wrap">
+            <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mr-1 shrink-0">
               Quick Filter:
             </span>
             <button
@@ -575,7 +575,7 @@ export default function ProductsPage() {
                 setSelectedStatus('ALL');
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
                 selectedStatus === 'ALL'
                   ? 'bg-black text-white shadow-2xs'
                   : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
@@ -589,7 +589,7 @@ export default function ProductsPage() {
                 setSelectedStatus('PUBLISHED');
                 setCurrentPage(1);
               }}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
                 selectedStatus === 'PUBLISHED'
                   ? 'bg-emerald-600 text-white shadow-2xs'
                   : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
@@ -604,7 +604,7 @@ export default function ProductsPage() {
                 setSelectedStatus('DRAFT');
                 setCurrentPage(1);
               }}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
                 selectedStatus === 'DRAFT'
                   ? 'bg-zinc-800 text-white shadow-2xs'
                   : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
@@ -630,14 +630,14 @@ export default function ProductsPage() {
               />
             </div>
 
-            <div className="flex gap-2.5 flex-wrap sm:flex-nowrap">
+            <div className="grid grid-cols-2 sm:flex gap-2.5 w-full md:w-auto">
               <select
                 value={selectedCategory}
                 onChange={(e) => {
                   setSelectedCategory(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="px-3 py-2 rounded-lg border border-zinc-200 text-xs bg-white text-zinc-800 focus:outline-hidden cursor-pointer"
+                className="w-full sm:w-auto px-3 py-2 rounded-lg border border-zinc-200 text-xs bg-white text-zinc-800 focus:outline-hidden cursor-pointer"
               >
                 <option value="ALL">All Categories</option>
                 {categories.map((c) => (
@@ -653,7 +653,7 @@ export default function ProductsPage() {
                   setSelectedStatus(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="px-3 py-2 rounded-lg border border-zinc-200 text-xs bg-white text-zinc-800 focus:outline-hidden cursor-pointer"
+                className="w-full sm:w-auto px-3 py-2 rounded-lg border border-zinc-200 text-xs bg-white text-zinc-800 focus:outline-hidden cursor-pointer"
               >
                 <option value="ALL">All Status</option>
                 <option value="PUBLISHED">Published Only</option>

@@ -40,19 +40,20 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
     };
 
   return (
-    <header className="h-16 px-6 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md flex items-center justify-between sticky top-0 z-30 shadow-2xs">
-      <div className="flex items-center gap-4 min-w-0">
+    <header className="h-16 px-3.5 sm:px-6 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md flex items-center justify-between sticky top-0 z-30 shadow-2xs gap-2">
+      <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
         <button
           type="button"
           onClick={onOpenMobileMenu}
-          className="lg:hidden p-2 rounded-xl border border-zinc-200 text-zinc-600 hover:bg-zinc-100 cursor-pointer transition-colors"
+          className="lg:hidden p-2 rounded-xl border border-zinc-200 text-zinc-700 bg-white hover:bg-zinc-100 cursor-pointer transition-colors shrink-0"
+          aria-label="Open navigation menu"
         >
           <Menu className="w-4 h-4" />
         </button>
 
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h1 className="text-base font-black text-zinc-950 truncate tracking-tight font-sans">
+            <h1 className="text-sm sm:text-base font-black text-zinc-950 truncate tracking-tight font-sans">
               {currentInfo.title}
             </h1>
             <span className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-mono font-bold border border-emerald-200/50">
@@ -60,23 +61,23 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
               <span>SYNCED</span>
             </span>
           </div>
-          <p className="hidden sm:block text-xs text-zinc-500 truncate mt-0.5">
+          <p className="hidden md:block text-xs text-zinc-500 truncate mt-0.5">
             {currentInfo.subtitle}
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Quick View Live Store Link */}
         <a
           href={process.env.NEXT_PUBLIC_STOREFRONT_URL || 'https://teesoulz.vercel.app'}
           target="_blank"
           rel="noopener noreferrer"
           title="Open live storefront website in new tab"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 hover:border-zinc-300 text-zinc-800 text-xs font-bold transition-all cursor-pointer shadow-2xs"
+          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 hover:border-zinc-300 text-zinc-800 text-xs font-bold transition-all cursor-pointer shadow-2xs shrink-0"
         >
           <Globe className="w-3.5 h-3.5 text-emerald-600" />
-          <span className="hidden sm:inline">View Live Store</span>
+          <span className="hidden sm:inline">Store</span>
           <ExternalLink className="w-3 h-3 text-zinc-400" />
         </a>
 

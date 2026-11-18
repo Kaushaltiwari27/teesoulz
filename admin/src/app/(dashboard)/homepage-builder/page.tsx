@@ -1934,7 +1934,7 @@ export default function HomepageBuilderPage() {
       )}
 
       {/* Floating Save Bar at Bottom */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 bg-zinc-950 text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-4 border border-zinc-800">
+      <div className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-auto sm:left-1/2 sm:-translate-x-1/2 z-30 bg-zinc-950/95 backdrop-blur-md text-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl sm:rounded-full shadow-2xl flex items-center justify-between sm:justify-start gap-3 sm:gap-4 border border-zinc-800">
         <span className="text-xs text-zinc-300 hidden sm:inline">
           Ready to apply changes to your live storefront?
         </span>
@@ -1942,7 +1942,7 @@ export default function HomepageBuilderPage() {
           type="button"
           disabled={isSaving}
           onClick={handleSaveAll}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors cursor-pointer disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2 sm:py-1.5 rounded-xl sm:rounded-full bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors cursor-pointer disabled:opacity-50 w-full sm:w-auto shrink-0 shadow-xs"
         >
           <Save className="w-3.5 h-3.5" />
           <span>{isSaving ? 'Syncing...' : 'Save & Publish Live'}</span>
