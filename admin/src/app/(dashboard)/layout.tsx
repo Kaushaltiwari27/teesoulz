@@ -13,7 +13,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#fbfbfb] flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-[#f8f9fa] flex flex-col items-center justify-center p-4">
         <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center font-mono font-black text-sm mb-4">
           TS
         </div>
@@ -27,13 +27,13 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-zinc-950 flex flex-col antialiased">
+    <div className="min-h-screen bg-[#f8f9fa] text-zinc-950 flex flex-row antialiased">
       <Sidebar
         mobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
       />
 
-      <div className="lg:pl-64 flex flex-col flex-1 min-w-0">
+      <div className="flex-1 flex flex-col min-w-0">
         <Header onOpenMobileMenu={() => setMobileSidebarOpen(true)} />
 
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
