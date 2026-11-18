@@ -3,7 +3,8 @@ import HomeSectionsClient from '@/components/home/HomeSectionsClient';
 import { getProducts } from '@/lib/supabase/products';
 import { PRODUCTS } from '@/data/mockData';
 
-export const instant = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function HomePage() {
   const liveProducts = await getProducts();

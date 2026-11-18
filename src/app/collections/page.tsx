@@ -14,7 +14,8 @@ export const metadata: Metadata = {
   },
 };
 
-export const instant = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function CollectionsPage() {
   const liveCols = await getLiveCollections();

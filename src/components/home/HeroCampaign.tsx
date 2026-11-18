@@ -71,7 +71,7 @@ export default function HeroCampaign() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const activeSlides = (cms.heroSlides && cms.heroSlides.length > 0)
-    ? cms.heroSlides.filter((s) => s.active)
+    ? cms.heroSlides.filter((s) => s.active !== false)
     : BONKERS_SLIDES;
 
   const slides = activeSlides.length > 0 ? activeSlides : BONKERS_SLIDES;

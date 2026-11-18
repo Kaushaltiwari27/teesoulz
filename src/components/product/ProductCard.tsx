@@ -17,7 +17,10 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   const [isHovered, setIsHovered] = useState(false);
 
   const isWishlisted = isInWishlist(product.id);
-  const hasSecondaryImage = product.images.length > 1;
+  const fallbackPlaceholder = 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80';
+  const primaryImage = product.images?.[0] || fallbackPlaceholder;
+  const secondaryImage = product.images?.[1] || primaryImage;
+  const hasSecondaryImage = (product.images?.length ?? 0) > 1;
   const isOutOfStock = product.totalStock <= 0;
 
   const handleWishlistClick = (e: React.MouseEvent) => {
@@ -41,7 +44,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         >
           {/* Primary Image */}
           <Image
-            src={product.images[0]}
+            src={primaryImage}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -54,7 +57,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           {/* Secondary Alternate Image on Hover */}
           {hasSecondaryImage && (
             <Image
-              src={product.images[1]}
+              src={secondaryImage}
               alt={`${product.name} alternate view`}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

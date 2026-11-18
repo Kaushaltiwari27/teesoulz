@@ -251,8 +251,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         })
         .subscribe();
 
+      const handleFocus = () => {
+        refreshProducts();
+        refreshTaxonomy();
+      };
+      window.addEventListener('focus', handleFocus);
+
       return () => {
         supabase.removeChannel(channel);
+        window.removeEventListener('focus', handleFocus);
       };
     } catch (subErr) {
       console.warn('Realtime sync subscription failed:', subErr);

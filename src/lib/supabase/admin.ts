@@ -16,19 +16,16 @@ export function createAdminClient() {
     throw new Error('FATAL SECURITY VIOLATION: createAdminClient cannot be called from the browser.');
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'https://rcxvyfgeduyokdahkrow.supabase.co';
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '';
 
-  if (!supabaseUrl || !serviceRoleKey) {
-    console.warn(
-      '[Supabase Admin] Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY. ' +
-      'Admin operations requiring elevated privileges cannot proceed without these credentials.'
-    );
+  if (!serviceRoleKey) {
+    console.warn('[Supabase Admin] SUPABASE_SERVICE_ROLE_KEY is not configured.');
   }
 
   return createSupabaseClient<Database>(
-    supabaseUrl || 'https://placeholder.supabase.co',
-    serviceRoleKey || 'placeholder-service-role-key',
+    supabaseUrl,
+    serviceRoleKey,
     {
       auth: {
         autoRefreshToken: false,

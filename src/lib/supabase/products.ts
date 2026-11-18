@@ -12,6 +12,9 @@ function getPublicCatalogClient() {
       persistSession: false,
       autoRefreshToken: false,
     },
+    global: {
+      fetch: (input, init) => fetch(input, { ...init, cache: 'no-store' }),
+    },
   });
 }
 
@@ -51,6 +54,9 @@ export function mapDatabaseProductToProduct(row: any): Product {
     .map((c: any) => c.collection?.slug || c.slug)
     .filter(Boolean);
 
+  const rawImages = Array.isArray(row.images) ? row.images.filter(Boolean) : [];
+  const images = rawImages.length > 0 ? rawImages : ['https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80'];
+
   return {
     id: row.id,
     slug: row.slug,
@@ -66,7 +72,7 @@ export function mapDatabaseProductToProduct(row: any): Product {
     price: row.price_in_paise / 100,
     mrp: row.mrp_in_paise / 100,
     discountPercent: row.discount_percent || 0,
-    images: row.images || [],
+    images,
     variants,
     availableColors: row.available_colors || [],
     availableSizes: row.available_sizes || [],

@@ -3,6 +3,10 @@ import { Archivo_Narrow } from 'next/font/google';
 import './globals.css';
 import { StoreProvider } from '@/context/StoreContext';
 import StoreLayoutShell from '@/components/layout/StoreLayoutShell';
+import { getLiveCmsSettings } from '@/lib/supabase/cms';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 
 
@@ -185,11 +189,13 @@ const organizationJsonLd = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialCms = await getLiveCmsSettings();
+
   return (
     <html lang="en-IN" className={archivoNarrow.variable}>
       <head>
@@ -200,16 +206,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col font-sans bg-white text-[#111111] antialiased overflow-x-hidden w-full selection:bg-black selection:text-white">
         <StoreProvider>
-
-          <StoreLayoutShell>{children}</StoreLayoutShell>
-
-
-          {/* Interactive Global Drawers & Modals */}
-
-
-
-
-
+          <StoreLayoutShell initialCms={initialCms}>{children}</StoreLayoutShell>
         </StoreProvider>
       </body>
     </html>

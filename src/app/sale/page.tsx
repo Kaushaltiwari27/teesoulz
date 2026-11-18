@@ -10,7 +10,8 @@ export const metadata = {
   description: 'Limited-time special prices on premium heavyweight Indian streetwear.',
 };
 
-export const instant = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function SalePage() {
   const liveProducts = await getProducts();

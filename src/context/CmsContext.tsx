@@ -77,8 +77,11 @@ export function CmsProvider({
 
   // Hydrate from initialCms / localStorage on client mount, then sync with live Supabase database
   useEffect(() => {
-    try {
-      if (!initialCms) {
+    if (initialCms) {
+      setCms(initialCms);
+      setIsHydrated(true);
+    } else {
+      try {
         const stored = localStorage.getItem(CMS_STORAGE_KEY);
         if (stored) {
           const parsed = JSON.parse(stored);
@@ -93,11 +96,11 @@ export function CmsProvider({
             trustPerks: { ...DEFAULT_CMS_DATA.trustPerks, ...(parsed.trustPerks || {}) },
           }));
         }
+      } catch (e) {
+        console.warn('Failed to parse CMS data from localStorage:', e);
+      } finally {
+        setIsHydrated(true);
       }
-    } catch (e) {
-      console.warn('Failed to parse CMS data from localStorage:', e);
-    } finally {
-      setIsHydrated(true);
     }
 
     // Initial Live Sync from Supabase
@@ -117,11 +120,17 @@ export function CmsProvider({
         )
         .subscribe();
 
+      const handleFocus = () => {
+        fetchLiveCmsFromSupabase();
+      };
+      window.addEventListener('focus', handleFocus);
+
       return () => {
         supabase.removeChannel(channel);
+        window.removeEventListener('focus', handleFocus);
       };
     } catch {}
-  }, [fetchLiveCmsFromSupabase]);
+  }, [fetchLiveCmsFromSupabase, initialCms]);
 
   // Sync to localStorage and broadcast whenever cms changes
   const saveCmsData = useCallback((newData: WebsiteCmsData) => {

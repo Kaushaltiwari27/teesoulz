@@ -1,6 +1,9 @@
 import React, { Suspense } from 'react';
 import ShopClient from './ShopClient';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Shop All Streetwear Drops — TEESOULZ',
   description: 'Explore the full TEESOULZ catalogue: heavyweight oversized t-shirts, graphic tees, loopback hoodies, and utility cargos.',

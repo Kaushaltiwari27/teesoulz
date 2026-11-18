@@ -10,7 +10,8 @@ export const metadata = {
   description: 'Explore the newest heavyweight drop-shoulder oversized tees, hoodies, and streetwear essentials.',
 };
 
-export const instant = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function NewInPage() {
   const liveNew = await getProducts({ isNewArrival: true });

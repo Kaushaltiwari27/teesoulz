@@ -12,7 +12,9 @@ export async function generateStaticParams() {
   return COLLECTIONS_DATA.map((c) => ({ slug: c.slug }));
 }
 
-export const instant = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const dynamicParams = true;
 
 interface Props {
   params: Promise<{ slug: string }>;

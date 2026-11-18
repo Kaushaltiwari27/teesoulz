@@ -17,7 +17,19 @@ export default function HomeSectionsClient({ initialProducts }: { initialProduct
   const { cms } = useCms();
   const { products: storeProducts } = useStore();
 
-  const products = storeProducts && storeProducts.length > 0 ? storeProducts : initialProducts;
+  const [products, setProducts] = React.useState<Product[]>(initialProducts && initialProducts.length > 0 ? initialProducts : (storeProducts || []));
+
+  React.useEffect(() => {
+    if (initialProducts && initialProducts.length > 0) {
+      setProducts(initialProducts);
+    }
+  }, [initialProducts]);
+
+  React.useEffect(() => {
+    if (storeProducts && storeProducts.length > 0) {
+      setProducts(storeProducts);
+    }
+  }, [storeProducts]);
 
   // 1. Curated New Arrivals (8 items)
   const newArrivals = products.filter(

@@ -10,7 +10,8 @@ export const metadata = {
   description: 'Our most demanded heavyweight silhouettes, 260 GSM boxy tees, and structural hoodies.',
 };
 
-export const instant = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function BestsellersPage() {
   const liveBestsellers = await getProducts({ isBestseller: true });
